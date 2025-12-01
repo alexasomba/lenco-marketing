@@ -2,7 +2,8 @@ import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
-import Header from '../components/Header'
+import LencoHeader from '../components/LencoHeader'
+import LencoFooter from '../components/LencoFooter'
 
 import appCss from '../styles.css?url'
 
@@ -17,7 +18,11 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Lenco - All-in-one finance built for Sole traders',
+      },
+      {
+        name: 'description',
+        content: 'Lenco provides business bank accounts, payments, and expense management for startups, sole traders, SMBs and freelancers in Nigeria.',
       },
     ],
     links: [
@@ -37,9 +42,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
-        <Header />
+      <body className="antialiased">
+        <LencoHeader />
         {children}
+        <LencoFooter />
         <TanStackDevtools
           config={{
             position: 'bottom-right',
