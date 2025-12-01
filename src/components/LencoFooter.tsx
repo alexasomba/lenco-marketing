@@ -1,12 +1,12 @@
 import { Link } from '@tanstack/react-router'
-import { BarChart3, MapPin, Mail } from 'lucide-react'
+import { MapPin, Mail } from 'lucide-react'
 
 export default function LencoFooter() {
   return (
     <footer className="bg-white border-t border-gray-100 pt-14 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-x-8 gap-y-10 pb-12">
-          {/* Logo and Report Button */}
+          {/* Logo and Get Started Button */}
           <div className="col-span-2 sm:col-span-1 md:col-span-1">
             <Link to="/" className="inline-block mb-5">
               <img
@@ -16,11 +16,10 @@ export default function LencoFooter() {
               />
             </Link>
             <a
-              href="#report"
-              className="inline-flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-md text-xs text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all whitespace-nowrap"
+              href="#get-started"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-xs text-white font-medium transition-all whitespace-nowrap"
             >
-              <BarChart3 className="w-3.5 h-3.5" />
-              <span>View Report & Status</span>
+              Get Started in 10 min
             </a>
           </div>
 
@@ -107,15 +106,15 @@ export default function LencoFooter() {
               <li>
                 <a href="#locations" className="text-gray-500 hover:text-gray-900 text-sm transition-colors inline-flex items-center gap-1">
                   Locations
-                  <MapPin className="w-3 h-3 text-blue-500" />
+                  <MapPin className="w-3 h-3 text-blue-600" />
                 </a>
               </li>
               <li>
                 <a
                   href="mailto:support@lenco.co"
-                  className="text-gray-500 hover:text-gray-900 text-sm transition-colors inline-flex items-center gap-1.5"
+                  className="text-blue-600 hover:text-blue-700 text-sm transition-colors inline-flex items-center gap-1.5"
                 >
-                  <Mail className="w-3 h-3 text-blue-500" />
+                  <Mail className="w-3 h-3" />
                   support@lenco.co
                 </a>
               </li>

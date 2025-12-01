@@ -14,49 +14,49 @@ export default function LencoHeader() {
             <img
               src="/lenco-logo.svg"
               alt="Lenco"
-              className="h-8"
+              className="h-7"
             />
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-7">
             <div className="relative group">
-              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900 font-medium">
+              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900 text-sm font-medium">
                 Products
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-3.5 h-3.5" />
               </button>
             </div>
             <div className="relative group">
-              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900 font-medium">
+              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900 text-sm font-medium">
                 Business
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-3.5 h-3.5" />
               </button>
             </div>
-            <a href="#pricing" className="text-gray-600 hover:text-gray-900 font-medium">
+            <a href="#pricing" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
               Pricing
             </a>
             <div className="relative group">
-              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900 font-medium">
+              <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900 text-sm font-medium">
                 Support
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-3.5 h-3.5" />
               </button>
             </div>
-            <a href="#login" className="text-gray-600 hover:text-gray-900 font-medium">
+            <a href="#login" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
               Log in
             </a>
           </nav>
 
           {/* CTA Buttons */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
             <a
               href="#get-started"
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors"
             >
               Get Started in Minutes
             </a>
-            <button className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
+            <button className="flex items-center gap-1 text-gray-500 hover:text-gray-900">
               <span className="text-sm">EN</span>
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className="w-3.5 h-3.5" />
             </button>
           </div>
 

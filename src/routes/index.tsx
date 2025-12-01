@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import { TypingAnimation } from '@/components/ui/typing-animation'
 import {
   Check,
   Phone,
@@ -90,13 +91,21 @@ function LencoLandingPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="pt-16 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-slate-50 to-white">
+      <section className="pt-16 pb-20 px-4 sm:px-6 lg:px-8 bg-linear-to-b from-slate-50 to-white">
         <div className="max-w-7xl mx-auto text-center">
           <p className="text-blue-600 font-medium mb-4">Meet Lenco</p>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
             All-in-one finance
             <br />
-            built for <span className="text-blue-600">Sole traders</span>
+            built for{' '}
+            <TypingAnimation
+              words={['Freelancers', 'Sole Traders', 'SMEs', 'Tech Startups']}
+              className="text-blue-600"
+              loop={true}
+              duration={80}
+              pauseDelay={2000}
+              cursorStyle="line"
+            />
           </h1>
           <p className="text-gray-600 text-lg mb-8">
             Bank accounts | Payments | Expense management
