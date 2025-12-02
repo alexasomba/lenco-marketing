@@ -10,13 +10,29 @@ export const blog = defineDocs({
   docs: {
     schema: frontmatterSchema.extend({
       date: z.string(),
-      tags: z.array(z.string()).optional(),
+      // Allowed tag set — make this strict so frontmatter must use canonical tags
+      tags: z.array(z.enum([
+        'Getting Started',
+        'Business',
+        'Nigeria',
+        'API',
+        'Business Banking',
+        'Guide',
+        'Cash Flow',
+        'Finance Tips',
+        'Small Business',
+        'Tips',
+        'Finance',
+        'Zambia',
+      ])).optional(),
       featured: z.boolean().optional().default(false),
-      readTime: z.string().optional(),
+      // We'll use a numeric read time in minutes for stricter handling
+      readTimeMinutes: z.number().int().positive().optional(),
+      // Strict enum validation for author metadata — keeps the author list canonical
       author: z.union([
-        z.string(),
-        z.object({ name: z.string(), avatar: z.string().optional(), position: z.string().optional() }),
-        z.array(z.object({ name: z.string(), avatar: z.string().optional(), position: z.string().optional() })),
+        z.enum(['Alex Asomba', 'Lenco Team']),
+        z.object({ name: z.enum(['Alex Asomba', 'Lenco Team']), avatar: z.string().regex(/^\/images\/authors\/.+\.(svg|png|jpe?g)$/).optional(), position: z.enum(['Writer', 'Editorial']) }),
+        z.array(z.object({ name: z.enum(['Alex Asomba', 'Lenco Team']), avatar: z.string().regex(/^\/images\/authors\/.+\.(svg|png|jpe?g)$/).optional(), position: z.enum(['Writer', 'Editorial']) })),
       ]).optional(),
       thumbnail: z.string().optional(),
     }),

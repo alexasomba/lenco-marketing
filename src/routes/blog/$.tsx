@@ -31,6 +31,8 @@ interface BlogPageData {
   date: string;
   tags?: string[];
   thumbnail?: string;
+  // numeric read time in minutes
+  readTimeMinutes?: number;
   // author can be a string or an array of author objects
   author?: string | { name: string; avatar?: string; position?: string } | Array<{ name: string; avatar?: string; position?: string }>
 }
@@ -51,6 +53,7 @@ const serverLoader = createServerFn({
       description: p.data.description,
       date: p.data.date,
       tags: p.data.tags,
+      readTimeMinutes: p.data.readTimeMinutes,
       thumbnail: p.data.thumbnail,
     }));
 
@@ -61,7 +64,7 @@ const serverLoader = createServerFn({
       description: page.data.description,
       date: page.data.date,
       tags: page.data.tags,
-      readTime: page.data.readTime,
+      readTimeMinutes: page.data.readTimeMinutes,
       author: page.data.author,
       thumbnail: page.data.thumbnail,
       allPosts,
@@ -163,10 +166,10 @@ function BlogPostPage() {
               <Calendar className="w-4 h-4" />
               <span>{formatDate(data.date)}</span>
             </span>
-            {data.readTime && (
+            {data.readTimeMinutes && (
               <span className="flex items-center gap-2">
                 <Clock className="w-4 h-4" />
-                <span>{data.readTime}</span>
+                <span>{data.readTimeMinutes} min read</span>
               </span>
             )}
             {/* Share buttons */}

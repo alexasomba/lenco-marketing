@@ -29,7 +29,7 @@ interface BlogPageData {
   date: string;
   tags?: string[];
   featured?: boolean;
-  readTime?: string;
+  readTimeMinutes?: number;
   author?: string | { name: string; avatar?: string; position?: string } | Array<{ name: string; avatar?: string; position?: string } | string>;
   thumbnail?: string;
 }
@@ -46,7 +46,7 @@ const serverLoader = createServerFn({
     date: page.data.date,
     tags: page.data.tags,
     featured: page.data.featured,
-    readTime: page.data.readTime,
+    readTimeMinutes: page.data.readTimeMinutes,
     author: page.data.author,
     thumbnail: page.data.thumbnail,
   }));
