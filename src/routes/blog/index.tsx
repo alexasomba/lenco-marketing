@@ -2,7 +2,6 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import { blogSource } from '@/lib/blog-source';
 import { FeaturedSlider } from '@/components/blog/featured-slider';
-import { getLocalThumbnail } from '@/lib/utils';
 import { NewsletterSection } from '@/components/blog/newsletter-section';
 import { TrendingTags } from '@/components/blog/trending-tags';
 import { FeaturedHero } from '@/components/blog/featured-hero';
@@ -11,14 +10,10 @@ import { ResourcesSection } from '@/components/blog/resources-section';
 import { RecentPostsGrid } from '@/components/blog/recent-posts-grid';
 import { Button } from '@/components/ui/button';
 import { getAuthors } from '@/lib/authors';
+import { ArrowRight } from 'lucide-react';
 
 export const Route = createFileRoute('/blog/')({
   component: BlogIndexPage,
-  validateSearch: (search: Record<string, unknown>) => {
-    return {
-      tag: (search.tag as string) || 'All',
-    };
-  },
   loader: async () => {
     return await serverLoader();
   },
@@ -95,7 +90,6 @@ function formatDate(dateString: string): string {
 
 function BlogIndexPage() {
   const { posts, allTags, featuredPosts } = Route.useLoaderData();
-  const { tag: selectedTag } = Route.useSearch();
 
   // Format dates for display
   const formattedPosts = posts.map((post) => ({
@@ -107,11 +101,6 @@ function BlogIndexPage() {
     ...post,
     date: formatDate(post.date),
   }));
-
-  // Filter posts if tag is selected
-  const filteredPosts = selectedTag === 'All'
-    ? formattedPosts
-    : formattedPosts.filter((post) => post.tags?.includes(selectedTag));
 
   // Get the main featured post (most recent featured)
   const mainFeaturedPost = formattedFeaturedPosts[0]
@@ -130,7 +119,7 @@ function BlogIndexPage() {
     typeof author === 'string' ? author : Array.isArray(author) ? author.map((a) => (typeof a === 'string' ? a : a.name)).join(', ') : author?.name;
 
   const sliderPosts = formattedPosts.slice(0, 8).map((p) => ({ ...p, author: authorToString(p.author) }));
-  const gridPosts = filteredPosts.slice(0, 4).map((p) => ({ ...p, author: authorToString(p.author) }));
+  const gridPosts = formattedPosts.slice(0, 4).map((p) => ({ ...p, author: authorToString(p.author) }));
   const recentPosts = formattedPosts.slice(0, 6).map((p) => ({ ...p, author: authorToString(p.author) }));
 
   return (
@@ -151,97 +140,24 @@ function BlogIndexPage() {
       {/* Featured Hero Post */}
       {mainFeaturedPost && <FeaturedHero post={mainFeaturedPost} />}
 
-      {/* Post Grid with tag filter indicator */}
-      {selectedTag !== 'All' ? (
-        <div className="py-10 px-6 bg-background">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Posts tagged with
-                </h3>
-                <span className="px-3 py-1 text-sm font-semibold bg-primary text-primary-foreground rounded-full">
-                  {selectedTag}
-                </span>
-              </div>
-              <Link to="/blog" search={{ tag: 'All' }}>
-                <Button variant="outline" size="sm">
-                  Clear filter
-                </Button>
-              </Link>
-            </div>
+      {/* Regular post grid */}
+      <PostGrid posts={gridPosts} columns={4} />
 
-            {filteredPosts.length === 0 ? (
-              <div className="py-20 text-center">
-                <p className="text-muted-foreground">No posts found with this tag.</p>
-              </div>
-            ) : (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredPosts.map((post) => (
-                  <Link key={post.url} to={post.url} className="group block">
-                    <article className="h-full">
-                      <div className="relative aspect-16/10 rounded-xl overflow-hidden mb-4">
-                        {
-                          <img
-                            src={getLocalThumbnail(post.thumbnail)}
-                            alt={post.title}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                        }
-                        {post.tags && post.tags.length > 0 && (
-                          <div className="absolute bottom-3 left-3">
-                            <span className="px-2.5 py-1 text-xs font-semibold uppercase tracking-wider bg-primary text-primary-foreground rounded-full">
-                              {post.tags[0]}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="space-y-2">
-                        <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                          {post.title}
-                        </h3>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <span>{post.date}</span>
-                          {post.author && (
-                            <>
-                              <span>—</span>
-                              <span>
-                                {typeof post.author === 'string'
-                                  ? post.author
-                                  : Array.isArray(post.author)
-                                  ? post.author.map((a) => (typeof a === 'string' ? a : a.name)).join(', ')
-                                  : post.author.name}
-                              </span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </article>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      ) : (
-        <>
-          {/* Regular post grid */}
-          <PostGrid posts={gridPosts} columns={4} />
+      {/* Resources Section */}
+      <ResourcesSection />
 
-          {/* Resources Section */}
-          <ResourcesSection />
+      {/* Recent Posts */}
+      <RecentPostsGrid posts={recentPosts} />
 
-          {/* Recent Posts */}
-          <RecentPostsGrid posts={recentPosts} />
-        </>
-      )}
-
-      {/* Load More Button */}
-      {filteredPosts.length > 6 && (
+      {/* More Articles Button */}
+      {formattedPosts.length > 6 && (
         <div className="py-10 px-6 bg-background text-center">
-          <Button variant="outline" className="px-8">
-            Load More
-          </Button>
+          <Link to="/blog/all" search={{ tag: 'All', page: 1 }}>
+            <Button variant="outline" className="px-8 gap-2">
+              More Articles
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Link>
         </div>
       )}
     </div>

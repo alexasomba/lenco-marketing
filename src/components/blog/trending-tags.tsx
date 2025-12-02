@@ -104,8 +104,8 @@ export function TrendingTags({ tags }: TrendingTagsProps) {
                   className="shrink-0 w-full sm:w-1/2 lg:w-1/4 px-1"
                 >
                   <Link
-                    to="/blog"
-                    search={{ tag }}
+                    to="/blog/all"
+                    search={{ tag, page: 1 }}
                     className="group block"
                   >
                     <div className={`${tagInfo.colorClass} border rounded-2xl p-6 h-full min-h-[200px] flex flex-col justify-between shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}>

@@ -12,17 +12,10 @@ export function baseOptions(): BaseLayoutProps {
       ),
       url: '/docs',
     },
-    links: [
-      {
-        text: 'Documentation',
-        url: '/docs',
-        active: 'nested-url',
-      },
-      {
-        text: 'Blog',
-        url: '/blog',
-      },
-    ],
+    // Sidebar links removed — docs and blog are surfaced in the sidebar's
+    // tree structure and an explicit 'Documentation' / 'Blog' link is not
+    // needed in the docs layout. Keep `links` omitted so the layout renders
+    // without extra top-level link buttons.
     githubUrl: 'https://github.com/lenco-africa/lenco-api',
   };
 }

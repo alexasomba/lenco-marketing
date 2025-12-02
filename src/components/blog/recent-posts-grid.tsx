@@ -34,8 +34,8 @@ export function RecentPostsGrid({ posts }: RecentPostsGridProps) {
             <p className="text-sm text-muted-foreground mt-1">Stay up to date with the latest articles</p>
           </div>
           <Link
-            to="/blog"
-            search={{ tag: 'All' }}
+            to="/blog/all"
+            search={{ tag: 'All', page: 1 }}
             className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors group"
           >
             View all articles
