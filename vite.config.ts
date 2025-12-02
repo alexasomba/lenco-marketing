@@ -13,29 +13,10 @@ const config = defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks(id: string) {
-          // Only group node_modules into vendor bundles
-          // Don't manually chunk app code - let Vite/Rollup handle it to preserve initialization order
-          if (id.includes('node_modules')) {
-            // React must be in its own chunk and loaded first
-            if (id.includes('react') || id.includes('react-dom')) return 'vendor-react';
-            // split some big libs that were showing up together in the visualizer
-            // so we can load them in their own chunks and reduce `main`
-            if (id.includes('motion') || id.includes('/motion/')) return 'vendor-motion';
-            if (id.includes('orama')) return 'vendor-orama';
-            if (id.includes('@floating-ui') || id.includes('floating-ui')) return 'vendor-floating';
-            // seroval MUST be bundled with @tanstack to preserve initialization order
-            // of ShallowErrorPlugin and other plugins
-            if (id.includes('seroval') || id.includes('seroval-')) return 'vendor-tanstack';
-            if (id.includes('@intercom') || id.includes('intercom')) return 'vendor-intercom';
-            if (id.includes('@tanstack')) return 'vendor-tanstack';
-            if (id.includes('fumadocs-mdx') || id.includes('fumadocs-core') || id.includes('fumadocs-ui') || id.includes('mdx')) return 'vendor-fumadocs';
-            if (id.includes('lucide-react') || id.includes('simple-icons') || id.includes('svg-dotted-map')) return 'vendor-icons';
-            if (id.includes('tailwind-merge') || id.includes('tailwindcss') || id.includes('@tailwindcss')) return 'vendor-tailwind';
-            return 'vendor';
-          }
-          // Let Vite handle app code chunking automatically
-        },
+        // Disable manual chunking entirely - let Vite/Rollup handle it
+        // to preserve proper initialization order. Manual chunking was
+        // causing "Cannot access X before initialization" errors due to
+        // circular dependencies between chunks.
       },
     },
   },
