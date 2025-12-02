@@ -17,7 +17,7 @@ import {
 } from 'fumadocs-ui/layouts/docs/page';
 import { LLMCopyButton, ViewOptions } from '@/components/page-actions';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
-import { baseOptions } from '@/lib/layout.shared';
+import { baseOptions, sidebarTabIcons } from '@/lib/layout.shared';
 
 export const Route = createFileRoute('/docs/$')({
   component: Page,
@@ -34,19 +34,32 @@ const serverLoader = createServerFn({
 })
   .inputValidator((slugs: string[]) => slugs)
   .handler(async ({ data: slugs }) => {
-    const page = source.getPage(slugs);
-    if (!page) throw notFound();
+    try {
+      const page = source.getPage(slugs);
+      if (!page) throw notFound();
 
-    return {
-      tree: source.pageTree as object,
-      path: page.path,
-      // Expose the page url so client components can derive things like
-      // markdown links and copy actions without re-resolving the source.
-      url: page.url,
-      // Make owner/repo available for things like "View on GitHub".
-      owner: getGithubIssueOwner(),
-      repo: getGithubIssueRepo(),
-    };
+      return {
+        tree: source.pageTree as object,
+        path: page.path,
+        // Page metadata for SEO
+        title: page.data.title,
+        description: page.data.description,
+        // Expose the page url so client components can derive things like
+        // markdown links and copy actions without re-resolving the source.
+        url: page.url,
+        // Make owner/repo available for things like "View on GitHub".
+        owner: getGithubIssueOwner(),
+        repo: getGithubIssueRepo(),
+      };
+    } catch (error) {
+      // Re-throw notFound errors as-is
+      if (error && typeof error === 'object' && 'notFound' in error) {
+        throw error;
+      }
+      // Log unexpected errors and throw a generic error
+      console.error('Error loading docs page:', error);
+      throw notFound();
+    }
   });
 
 const clientLoader = browserCollections.docs.createClientLoader({
@@ -130,7 +143,18 @@ function Page() {
   };
 
   return (
-    <DocsLayout {...baseOptions()} tree={tree}>
+    <DocsLayout
+      {...baseOptions()}
+      tree={tree}
+      sidebar={{
+        tabs: {
+          transform: (option, _node) => ({
+            ...option,
+            icon: sidebarTabIcons[option.title as keyof typeof sidebarTabIcons] || option.icon,
+          }),
+        },
+      }}
+    >
       <Content page={pageObj} owner={data.owner} repo={data.repo} />
     </DocsLayout>
   );

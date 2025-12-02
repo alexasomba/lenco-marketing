@@ -1,0 +1,9 @@
+{
+    "root": true,
+    "title": "API v1.0",
+    "description": "Legacy API (deprecated)",
+    "icon": "History",
+    "pages": [
+        "..."
+    ]
+}

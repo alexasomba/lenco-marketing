@@ -1,21 +1,7 @@
 {
-    "title": "API Reference",
     "pages": [
         "index",
-        "getting-started",
-        "---Endpoints---",
-        "accounts",
-        "recipients",
-        "banks",
-        "resolve",
-        "transactions",
-        "transfers",
-        "virtual-accounts",
-        "bill-payments",
-        "point-of-sale",
-        "---Reference---",
-        "webhooks",
-        "pricing",
-        "error-codes"
+        "api",
+        "v1.0"
     ]
 }

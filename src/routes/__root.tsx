@@ -10,6 +10,9 @@ import LencoFooter from '../components/LencoFooter'
 
 import appCss from '../styles.css?url'
 
+// Environment variable for Intercom (defaults to empty to disable if not set)
+const INTERCOM_APP_ID = import.meta.env.VITE_INTERCOM_APP_ID || '';
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -41,11 +44,15 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // Initialize Intercom for anonymous visitors (marketing site)
-    Intercom({
-      app_id: 'fmbs7641',
-    });
+    // Initialize Intercom only if app ID is configured
+    if (INTERCOM_APP_ID) {
+      Intercom({
+        app_id: INTERCOM_APP_ID,
+      });
+    }
   }, []);
+
+  const isDev = import.meta.env.DEV;
 
   return (
     <html lang="en">
@@ -58,17 +65,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           {children}
           <LencoFooter />
         </RootProvider>
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-          ]}
-        />
+        {/* Only show devtools in development */}
+        {isDev && (
+          <TanStackDevtools
+            config={{
+              position: 'bottom-right',
+            }}
+            plugins={[
+              {
+                name: 'Tanstack Router',
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+            ]}
+          />
+        )}
         <Scripts />
       </body>
     </html>

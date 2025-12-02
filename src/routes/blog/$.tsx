@@ -44,37 +44,47 @@ const serverLoader = createServerFn({
 })
   .inputValidator((slugs: string[]) => slugs)
   .handler(async ({ data: slugs }) => {
-    const page = blogSource.getPage(slugs);
-    if (!page) throw notFound();
+    try {
+      const page = blogSource.getPage(slugs);
+      if (!page) throw notFound();
 
-    // Get all posts for the "Read More" section
-    const allPages = blogSource.getPages();
-    const allPosts: BlogPageData[] = allPages.map((p) => ({
-      url: p.url,
-      title: p.data.title,
-      description: p.data.description,
-      date: p.data.date,
-      tags: p.data.tags,
-      readTimeMinutes: p.data.readTimeMinutes,
-      thumbnail: p.data.thumbnail,
-    }));
+      // Get all posts for the "Read More" section
+      const allPages = blogSource.getPages();
+      const allPosts: BlogPageData[] = allPages.map((p) => ({
+        url: p.url,
+        title: p.data.title,
+        description: p.data.description,
+        date: p.data.date,
+        tags: p.data.tags,
+        readTimeMinutes: p.data.readTimeMinutes,
+        thumbnail: p.data.thumbnail,
+      }));
 
-    return {
-      path: page.path,
-      slug: slugs.join('/'),
-      title: page.data.title,
-      description: page.data.description,
-      date: page.data.date,
-      tags: page.data.tags,
-      readTimeMinutes: page.data.readTimeMinutes,
-      // Resolve author alias(es) to Author objects from the central registry
-      author: (() => {
-        const resolved = getAuthors(page.data.author as any);
-        return resolved.length === 1 ? resolved[0] : resolved;
-      })(),
-      thumbnail: page.data.thumbnail,
-      allPosts,
-    };
+      return {
+        path: page.path,
+        slug: slugs.join('/'),
+        title: page.data.title,
+        description: page.data.description,
+        date: page.data.date,
+        tags: page.data.tags,
+        readTimeMinutes: page.data.readTimeMinutes,
+        // Resolve author alias(es) to Author objects from the central registry
+        author: (() => {
+          const resolved = getAuthors(page.data.author as any);
+          return resolved.length === 1 ? resolved[0] : resolved;
+        })(),
+        thumbnail: page.data.thumbnail,
+        allPosts,
+      };
+    } catch (error) {
+      // Re-throw notFound errors as-is
+      if (error && typeof error === 'object' && 'notFound' in error) {
+        throw error;
+      }
+      // Log unexpected errors and throw a generic error
+      console.error('Error loading blog page:', error);
+      throw notFound();
+    }
   });
 
 const clientLoader = blogBrowserCollections.blog.createClientLoader({

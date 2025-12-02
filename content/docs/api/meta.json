@@ -1,0 +1,24 @@
+{
+    "root": true,
+    "title": "API Reference",
+    "description": "Current API documentation (v2.0)",
+    "icon": "Book",
+    "pages": [
+        "index",
+        "getting-started",
+        "---Endpoints---",
+        "accounts",
+        "recipients",
+        "banks",
+        "resolve",
+        "transactions",
+        "transfers",
+        "virtual-accounts",
+        "bill-payments",
+        "point-of-sale",
+        "---Reference---",
+        "webhooks",
+        "pricing",
+        "error-codes"
+    ]
+}
