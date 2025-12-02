@@ -16,6 +16,15 @@ const BLOG_TAGS = [
   'Tips',
   'Finance',
   'Zambia',
+  'Operations',
+  'Business Growth',
+  'Strategy',
+  'Fintech',
+  'Africa',
+  'Security',
+  'Mobile Banking',
+  'Budgeting',
+  'Team Building',
 ] as const;
 
 export const docs = defineDocs({
