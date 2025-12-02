@@ -91,7 +91,7 @@ function LencoLandingPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="pt-16 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-muted/50 to-background relative overflow-hidden">
+      <section className="pt-16 pb-20 px-4 sm:px-6 lg:px-8 bg-linear-to-b from-muted/50 to-background relative overflow-hidden">
         {/* Subtle dot pattern background */}
         <div 
           className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" 
@@ -603,7 +603,7 @@ function LencoLandingPage() {
               <Card key={index} className="bg-muted/50 border-0 shadow-none hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3 mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-primary to-purple-600 rounded-full flex items-center justify-center text-primary-foreground font-bold shadow-lg">
+                      <div className="w-12 h-12 bg-linear-to-br from-primary to-purple-600 rounded-full flex items-center justify-center text-primary-foreground font-bold shadow-lg">
                         {testimonial.name.charAt(0)}
                       </div>
                       <div>

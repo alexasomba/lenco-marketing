@@ -20,9 +20,9 @@ export function NewsletterSection() {
   };
 
   return (
-    <div className="relative bg-gradient-to-b from-muted/80 to-muted py-16 px-6 overflow-hidden">
+    <div className="relative bg-linear-to-b from-muted/80 to-muted py-16 px-6 overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent" />
       
       <div className="relative max-w-2xl mx-auto text-center">
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4 tracking-tight">

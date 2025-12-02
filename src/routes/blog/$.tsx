@@ -94,7 +94,7 @@ function BlogPostPage() {
   return (
     <div className="min-h-screen bg-background relative">
       {/* Flickering Grid Background */}
-      <div className="absolute top-0 left-0 z-0 w-full h-[300px] [mask-image:linear-gradient(to_top,transparent_25%,black_95%)]">
+      <div className="absolute top-0 left-0 z-0 w-full h-[300px] mask-[linear-gradient(to_top,transparent_25%,black_95%)]">
         <FlickeringGrid
           className="absolute top-0 left-0 size-full"
           squareSize={4}
@@ -187,7 +187,7 @@ function BlogPostPage() {
         </main>
 
         {/* Sidebar - Desktop Only */}
-        <aside className="hidden lg:block w-[350px] flex-shrink-0 p-6 lg:p-10 bg-muted/60 dark:bg-muted/20">
+        <aside className="hidden lg:block w-[350px] shrink-0 p-6 lg:p-10 bg-muted/60 dark:bg-muted/20">
           <div className="sticky top-20 space-y-8">
             {/* Author Card */}
             {data.author && (

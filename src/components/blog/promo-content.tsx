@@ -11,7 +11,7 @@ export function PromoContent({ variant = "desktop", className }: PromoContentPro
     return (
       <div className={cn("border-t border-border bg-muted/20 p-3", className)}>
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center flex-shrink-0">
+          <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center shrink-0">
             <span className="text-primary font-bold text-sm">L</span>
           </div>
           <div className="flex-1 min-w-0">
@@ -36,7 +36,7 @@ export function PromoContent({ variant = "desktop", className }: PromoContentPro
   return (
     <div className={cn("border border-border rounded-lg p-4 bg-card", className)}>
       <div className="flex flex-col gap-4">
-        <div className="w-full h-32 rounded-md bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+        <div className="w-full h-32 rounded-md bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center">
           <div className="text-4xl font-bold text-primary">Lenco</div>
         </div>
         <div className="flex flex-col gap-2">
