@@ -112,8 +112,13 @@ export default function LencoFooter() {
             <h4 className="font-semibold text-foreground mb-4 text-sm">Support</h4>
             <ul className="space-y-3">
               <li>
-                <a href="#blog" className="text-muted-foreground hover:text-foreground text-sm transition-colors">
+                <a href="/blog" className="text-muted-foreground hover:text-foreground text-sm transition-colors">
                   Blog
+                </a>
+              </li>
+              <li>
+                <a href="/docs" className="text-muted-foreground hover:text-foreground text-sm transition-colors">
+                  Documentation
                 </a>
               </li>
               <li>
