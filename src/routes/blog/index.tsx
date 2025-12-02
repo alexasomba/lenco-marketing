@@ -30,7 +30,7 @@ interface BlogPageData {
   tags?: string[];
   featured?: boolean;
   readTime?: string;
-  author?: string;
+  author?: string | { name: string; avatar?: string; position?: string } | Array<{ name: string; avatar?: string; position?: string } | string>;
   thumbnail?: string;
 }
 
@@ -108,12 +108,24 @@ function BlogIndexPage() {
     : formattedPosts.filter((post) => post.tags?.includes(selectedTag));
 
   // Get the main featured post (most recent featured)
-  const mainFeaturedPost = formattedFeaturedPosts[0];
+  const mainFeaturedPost = formattedFeaturedPosts[0]
+    ? {
+        ...formattedFeaturedPosts[0],
+        author: typeof formattedFeaturedPosts[0].author === 'string'
+          ? formattedFeaturedPosts[0].author
+          : Array.isArray(formattedFeaturedPosts[0].author)
+          ? formattedFeaturedPosts[0].author.map((a) => (typeof a === 'string' ? a : a.name)).join(', ')
+          : formattedFeaturedPosts[0].author?.name,
+      }
+    : undefined;
 
-  // Get posts for different sections
-  const sliderPosts = formattedPosts.slice(0, 8);
-  const gridPosts = filteredPosts.slice(0, 4);
-  const recentPosts = formattedPosts.slice(0, 6);
+  // Get posts for different sections (ensure author is string for UI components)
+  const authorToString = (author?: any) =>
+    typeof author === 'string' ? author : Array.isArray(author) ? author.map((a) => (typeof a === 'string' ? a : a.name)).join(', ') : author?.name;
+
+  const sliderPosts = formattedPosts.slice(0, 8).map((p) => ({ ...p, author: authorToString(p.author) }));
+  const gridPosts = filteredPosts.slice(0, 4).map((p) => ({ ...p, author: authorToString(p.author) }));
+  const recentPosts = formattedPosts.slice(0, 6).map((p) => ({ ...p, author: authorToString(p.author) }));
 
   return (
     <div className="min-h-screen bg-background">
@@ -189,7 +201,13 @@ function BlogIndexPage() {
                           {post.author && (
                             <>
                               <span>—</span>
-                              <span>{post.author}</span>
+                              <span>
+                                {typeof post.author === 'string'
+                                  ? post.author
+                                  : Array.isArray(post.author)
+                                  ? post.author.map((a) => (typeof a === 'string' ? a : a.name)).join(', ')
+                                  : post.author.name}
+                              </span>
                             </>
                           )}
                         </div>

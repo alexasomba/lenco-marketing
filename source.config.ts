@@ -13,7 +13,11 @@ export const blog = defineDocs({
       tags: z.array(z.string()).optional(),
       featured: z.boolean().optional().default(false),
       readTime: z.string().optional(),
-      author: z.string().optional(),
+      author: z.union([
+        z.string(),
+        z.object({ name: z.string(), avatar: z.string().optional(), position: z.string().optional() }),
+        z.array(z.object({ name: z.string(), avatar: z.string().optional(), position: z.string().optional() })),
+      ]).optional(),
       thumbnail: z.string().optional(),
     }),
   },

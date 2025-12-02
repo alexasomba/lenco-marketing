@@ -5,11 +5,13 @@ import blogBrowserCollections from 'fumadocs-mdx:collections/browser';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { FlickeringGrid } from '@/components/magicui/flickering-grid';
 import { TableOfContents } from '@/components/blog/table-of-contents';
-import { AuthorCard } from '@/components/blog/author-card';
+import { AuthorCard, AuthorsInline, AuthorsStack } from '@/components/blog/author-card';
 import { PromoContent } from '@/components/blog/promo-content';
 import { MobileTableOfContents } from '@/components/blog/mobile-toc';
 import { ReadMoreSection } from '@/components/blog/read-more-section';
-import { ArrowLeft, Calendar, Clock } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Mail, Copy } from 'lucide-react';
+import { siFacebook, siX, siWhatsapp } from 'simple-icons';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/blog/$')({
@@ -29,6 +31,8 @@ interface BlogPageData {
   date: string;
   tags?: string[];
   thumbnail?: string;
+  // author can be a string or an array of author objects
+  author?: string | { name: string; avatar?: string; position?: string } | Array<{ name: string; avatar?: string; position?: string }>
 }
 
 const serverLoader = createServerFn({
@@ -145,9 +149,15 @@ function BlogPostPage() {
           {/* Meta info */}
           <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
             {data.author && (
-              <span className="flex items-center gap-2 font-medium text-foreground">
-                {data.author}
-              </span>
+              // render compact authors inline
+              <div className="flex items-center">
+                <div className="mr-3">
+                  {/* lazy load the authors inline component */}
+                  {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
+                  {/** Client-only rendering can be handled safely here since this will render on server, but avatars render gracefully **/}
+                  <AuthorsInline authors={data.author as any} />
+                </div>
+              </div>
             )}
             <span className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
@@ -159,6 +169,10 @@ function BlogPostPage() {
                 <span>{data.readTime}</span>
               </span>
             )}
+            {/* Share buttons */}
+            <div className="flex items-center gap-2 ml-auto">
+              <ShareButtons title={data.title} />
+            </div>
           </div>
         </div>
       </header>
@@ -189,13 +203,16 @@ function BlogPostPage() {
         {/* Sidebar - Desktop Only */}
         <aside className="hidden lg:block w-[350px] shrink-0 p-6 lg:p-10 bg-muted/60 dark:bg-muted/20">
           <div className="sticky top-20 space-y-8">
-            {/* Author Card */}
-            {data.author && (
-              <AuthorCard 
-                name={data.author} 
-                position="Author"
-              />
-            )}
+              {/* Author block: single or multiple */}
+              {data.author && (
+                Array.isArray(data.author) ? (
+                  <AuthorsStack authors={data.author as any} />
+                ) : typeof data.author === 'string' ? (
+                  <AuthorCard name={data.author} position="Author" />
+                ) : (
+                  <AuthorsStack authors={[data.author as any]} />
+                )
+              )}
 
             {/* Table of Contents */}
             <div className="border border-border rounded-lg p-6 bg-card">
@@ -217,6 +234,73 @@ function BlogPostPage() {
 
       {/* Mobile Table of Contents */}
       <MobileTableOfContents />
+    </div>
+  );
+}
+
+function ShareButtons({ title }: { title: string }) {
+  const [url, setUrl] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') setUrl(window.location.href);
+  }, []);
+
+  const onCopy = async () => {
+    if (!url) return;
+    await navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  const shareTwitter = () => {
+    const text = encodeURIComponent(`${title}`);
+    const shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const shareFacebook = () => {
+    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const shareEmail = () => {
+    const subject = encodeURIComponent(title);
+    const body = encodeURIComponent(url);
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  };
+
+  const shareWhatsApp = () => {
+    if (!url) return;
+    const text = encodeURIComponent(`${title} ${url}`);
+    // Works both on mobile (opens app) and desktop (opens WhatsApp Web)
+    const shareUrl = `https://wa.me/?text=${text}`;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      <Button size="icon" variant="outline" onClick={onCopy} aria-label="Copy link" title={copied ? 'Copied!' : 'Copy link'}>
+        <Copy className="w-4 h-4" />
+      </Button>
+      <Button size="icon" variant="outline" onClick={shareTwitter} aria-label="Share on Twitter" title="Share on Twitter">
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path d={siX.path} />
+        </svg>
+      </Button>
+      <Button size="icon" variant="outline" onClick={shareFacebook} aria-label="Share on Facebook" title="Share on Facebook">
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path d={siFacebook.path} />
+        </svg>
+      </Button>
+      <Button size="icon" variant="outline" onClick={shareWhatsApp} aria-label="Share on WhatsApp" title="Share on WhatsApp">
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path d={siWhatsapp.path} />
+        </svg>
+      </Button>
+      <Button size="icon" variant="outline" onClick={shareEmail} aria-label="Share by Email" title="Share by Email">
+        <Mail className="w-4 h-4" />
+      </Button>
     </div>
   );
 }
