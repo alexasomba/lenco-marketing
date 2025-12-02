@@ -98,14 +98,14 @@ export function Banner({
             setOpen(false);
             if (globalKey) localStorage.setItem(globalKey, 'true');
           }}
-          className={cn(
-            buttonVariants({
-              color: 'ghost',
-              className:
-                'absolute end-2 top-1/2 -translate-y-1/2 text-fd-muted-foreground/50',
-              size: 'icon-sm',
-            }),
-          )}
+              className={cn(
+                buttonVariants({
+                  variant: 'ghost',
+                  className:
+                    'absolute end-2 top-1/2 -translate-y-1/2 text-fd-muted-foreground/50',
+                  size: 'icon-sm',
+                }),
+              )}
         >
           <X />
         </button>

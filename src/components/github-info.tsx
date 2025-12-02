@@ -31,7 +31,7 @@ async function getRepoStarsAndForks(
     throw new Error(`Failed to fetch repository data: ${message}`);
   }
 
-  const data = await response.json();
+  const data: any = await response.json();
   return {
     stars: data.stargazers_count,
     forks: data.forks_count,
