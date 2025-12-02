@@ -1,0 +1,193 @@
+---
+title: Transfers
+description: Create bank transfers and send money
+---
+
+# Transfers
+
+Create bank transfers to send money from your Lenco accounts.
+
+## Create Transfer
+
+Create a new bank transfer transaction. This endpoint queues the request and returns a response instantly.
+
+<Callout>
+**POST** `https://api.lenco.co/access/v1/transfer`
+</Callout>
+
+### Request Body
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `accountId` | string | Yes | Your 36-character account UUID to transfer from |
+| `recipientId` | string | No | Recipient ID (use instead of accountNumber + bankCode) |
+| `accountNumber` | string | No | 10-digit NUBAN (use with bankCode if no recipientId) |
+| `bankCode` | string | No | Bank code (use with accountNumber if no recipientId) |
+| `amount` | string | Yes | Amount in NGN (must be positive) |
+| `narration` | string | Yes | The narration/description for the transaction |
+| `reference` | string | Yes | Unique client reference. Only `-`, `.`, `_` and alphanumeric characters allowed |
+| `senderName` | string | No | Custom sender name (Restricted feature) |
+
+### Response Schema
+
+```json
+{
+  "status": true,
+  "message": "string",
+  "data": {
+    "request": {
+      "status": "queued" | "created"
+    },
+    "transaction": {
+      "id": "string",
+      "amount": "string",
+      "fee": "string",
+      "narration": "string",
+      "type": "debit",
+      "initiatedAt": "date-time",
+      "completedAt": "date-time" | null,
+      "accountId": "string",
+      "details": {
+        "accountName": "string",
+        "accountNumber": "string",
+        "bank": {
+          "code": "string",
+          "name": "string"
+        }
+      },
+      "status": "pending" | "successful" | "failed",
+      "clientReference": "string",
+      "transactionReference": "string"
+    }
+  }
+}
+```
+
+### Request Status
+
+| Status | Description |
+|--------|-------------|
+| `queued` | Transaction is still in the queue and not yet attempted |
+| `created` | Transaction was created and is being processed. Check `data.transaction.status` |
+
+### Example Request
+
+```bash
+curl --request POST \
+  --url https://api.lenco.co/access/v1/transfer \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{
+    "accountId": "YOUR_ACCOUNT_ID",
+    "accountNumber": "0123456789",
+    "bankCode": "058",
+    "amount": "5000",
+    "narration": "Payment for services",
+    "reference": "ref-12345"
+  }'
+```
+
+---
+
+## Get Transfer by Reference
+
+Retrieve a transfer by your client reference.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/transfer/by-reference/{reference}`
+</Callout>
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `reference` | string | Yes | Your unique client reference |
+
+### Example Request
+
+```bash
+curl --request GET \
+  --url https://api.lenco.co/access/v1/transfer/by-reference/ref-12345 \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json'
+```
+
+---
+
+## Bulk Transfer
+
+Create multiple transfers in a single request.
+
+<Callout>
+**POST** `https://api.lenco.co/access/v1/transfer/bulk`
+</Callout>
+
+### Request Body
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `accountId` | string | Yes | Your 36-character account UUID to transfer from |
+| `reference` | string | Yes | Unique bulk transfer reference |
+| `transfers` | array | Yes | Array of transfer objects |
+
+Each transfer object in the `transfers` array:
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `recipientId` | string | No | Recipient ID |
+| `accountNumber` | string | No | 10-digit NUBAN |
+| `bankCode` | string | No | Bank code |
+| `amount` | string | Yes | Amount in NGN |
+| `narration` | string | Yes | Transaction narration |
+| `reference` | string | Yes | Unique reference for this transfer |
+
+### Example Request
+
+```bash
+curl --request POST \
+  --url https://api.lenco.co/access/v1/transfer/bulk \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{
+    "accountId": "YOUR_ACCOUNT_ID",
+    "reference": "bulk-ref-12345",
+    "transfers": [
+      {
+        "accountNumber": "0123456789",
+        "bankCode": "058",
+        "amount": "5000",
+        "narration": "Payment 1",
+        "reference": "ref-001"
+      },
+      {
+        "accountNumber": "9876543210",
+        "bankCode": "044",
+        "amount": "3000",
+        "narration": "Payment 2",
+        "reference": "ref-002"
+      }
+    ]
+  }'
+```
+
+---
+
+## Get Bulk Transfer by Reference
+
+Retrieve a bulk transfer by its reference.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/transfer/bulk/by-reference/{reference}`
+</Callout>
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `reference` | string | Yes | Your unique bulk transfer reference |
+
+<Callout type="warn">
+**Important**: Always verify account details using the [Resolve](/docs/resolve) endpoint before initiating transfers to avoid failed transactions.
+</Callout>

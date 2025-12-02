@@ -1,0 +1,192 @@
+---
+title: Virtual Accounts
+description: Create virtual account numbers for collections
+---
+
+# Virtual Accounts
+
+Create virtual account numbers to collect payments from your customers. Virtual accounts can be either static (permanent) or dynamic (single-use or time-limited).
+
+## Create Virtual Account
+
+Create a new virtual account number.
+
+<Callout>
+**POST** `https://api.lenco.co/access/v1/virtual-accounts`
+</Callout>
+
+### Request Body
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `accountName` | string | - | The name shown when the account is resolved |
+| `isStatic` | boolean | false | Set to true for permanent accounts |
+| `transactionReference` | string | - | Reference returned with each transfer. Only `-`, `.`, `_` and alphanumeric characters allowed |
+| `amount` | float | - | Exact amount to collect (for dynamic accounts). Use either `amount` or `minAmount` |
+| `minAmount` | float | - | Minimum amount to collect (for dynamic accounts). Use either `amount` or `minAmount` |
+| `bvn` | string | - | Required for static accounts. BVN tied to the customer |
+| `createNewAccount` | boolean | false | For static accounts: if true, creates a new account; if false, returns existing (Restricted feature) |
+
+### Response Schema
+
+```json
+{
+  "status": true,
+  "message": "string",
+  "data": {
+    "id": "string",
+    "accountReference": "string",
+    "bankAccount": {
+      "accountName": "string",
+      "accountNumber": "string",
+      "bank": {
+        "code": "string",
+        "name": "string"
+      }
+    },
+    "type": "Static Virtual Account" | "Dynamic Virtual Account",
+    "status": "active" | "expired" | "blacklisted",
+    "createdAt": "date-time",
+    "expiresAt": "date-time" | null,
+    "currency": "string",
+    "meta": {
+      "isStatic": true,
+      "bvn": "string" | null,
+      "transactionReference": "string" | null,
+      "amount": "string" | null,
+      "minAmount": "string" | null
+    }
+  }
+}
+```
+
+### Example: Create Dynamic Virtual Account
+
+```bash
+curl --request POST \
+  --url https://api.lenco.co/access/v1/virtual-accounts \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{
+    "accountName": "John Doe - Order #12345",
+    "isStatic": false,
+    "amount": 5000,
+    "transactionReference": "order-12345"
+  }'
+```
+
+### Example: Create Static Virtual Account
+
+```bash
+curl --request POST \
+  --url https://api.lenco.co/access/v1/virtual-accounts \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{
+    "accountName": "John Doe",
+    "isStatic": true,
+    "bvn": "12345678901"
+  }'
+```
+
+---
+
+## List Static Virtual Accounts
+
+Retrieve all your static virtual accounts.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/virtual-accounts`
+</Callout>
+
+### Query Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `page` | integer | 1 | The page number to retrieve |
+
+---
+
+## Get Virtual Account by Reference
+
+Retrieve a virtual account by its account reference.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/virtual-accounts/{account-reference}`
+</Callout>
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `account-reference` | string | Yes | The virtual account reference |
+
+---
+
+## Get Virtual Account by BVN
+
+Retrieve a static virtual account by BVN.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/virtual-account-by-bvn/{bvn}`
+</Callout>
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bvn` | string | Yes | The 11-digit BVN |
+
+---
+
+## Virtual Account Transactions
+
+### List All Virtual Account Transactions
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/virtual-accounts/transactions`
+</Callout>
+
+### Get Transaction by ID
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/virtual-accounts/transactions/{transaction-id}`
+</Callout>
+
+### List Rejected Transactions
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/virtual-accounts/rejected-transactions`
+</Callout>
+
+### Get Rejected Transaction by ID
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/virtual-accounts/rejected-transactions/{transaction-id}`
+</Callout>
+
+### List All Transactions (Including Rejected)
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/virtual-accounts/all-transactions`
+</Callout>
+
+---
+
+## Virtual Account Types
+
+| Type | Description |
+|------|-------------|
+| Static Virtual Account | Permanent account that doesn't expire. Requires BVN. |
+| Dynamic Virtual Account | Single-use or time-limited account for specific transactions. |
+
+<Callout type="info">
+**Webhook Notifications**: You'll receive webhook events for virtual account transactions:
+- `virtual-account.transaction` - When a payment is received
+- `virtual-account.transaction.settled` - When funds are settled to your account
+- `virtual-account.rejected-transaction` - When a payment is rejected
+
+See [Webhooks](/docs/webhooks) for details.
+</Callout>

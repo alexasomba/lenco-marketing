@@ -1,0 +1,196 @@
+---
+title: Bill Payments
+description: Pay for airtime, data, electricity, and cable TV
+---
+
+# Bill Payments
+
+With the Lenco API, you can pay for several kinds of bills including airtime, mobile data, electricity, and cable TV directly from your Lenco account.
+
+<Callout type="info">
+**Commission**: You earn a commission for each successful bill payment!
+</Callout>
+
+## Overview
+
+When paying bills on Lenco, you'll make a POST request to the create bill payment endpoint. You'll need to specify:
+
+- `productId` - The ID of the bill product
+- `customerId` - An identifier for the customer (phone number, decoder number, etc.)
+- `debitAccountId` - The ID of your Lenco account to debit
+- `amount` - The amount to pay (for variable-amount products)
+- `reference` - An optional unique reference for the transaction
+
+## Understanding Vendors and Products
+
+Bill products are grouped into categories: `airtime`, `mobile-data`, `cable-tv`, and `electricity`.
+
+They are also grouped by vendors (the company offering the service). A vendor can have multiple products across different categories (e.g., MTN has products for airtime and mobile data).
+
+### List All Vendors
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/bills/vendors`
+</Callout>
+
+### List Vendors by Category
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/bills/vendors/by-category/{category}`
+</Callout>
+
+Categories: `airtime`, `mobile-data`, `cable-tv`, `electricity`
+
+### Get Vendor by ID
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/bills/vendors/{id}`
+</Callout>
+
+---
+
+## Products
+
+### List All Products
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/bills/products`
+</Callout>
+
+### List Products by Category
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/bills/products/by-category/{category}`
+</Callout>
+
+### List Products by Vendor
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/bills/products/by-vendor/{vendorId}`
+</Callout>
+
+### Get Product by ID
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/bills/products/{id}`
+</Callout>
+
+### Product Amount Types
+
+| Type | Description |
+|------|-------------|
+| `fixed` | Amount is predetermined. Don't send `amount` when creating payment. |
+| `range` | Amount is variable. Ensure `amount` falls within `product.amount.minimum` and `product.amount.maximum`. |
+
+<Callout type="info">
+There is only one airtime product for each vendor that offers it.
+</Callout>
+
+---
+
+## Validating Customer Details
+
+Before processing a bill payment, validate the customer's details to ensure accuracy.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/bills/lookup-account`
+</Callout>
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `customerId` | string | Yes | Customer identifier (phone number, decoder number, etc.) |
+| `productId` | string | No | The product ID (use this or vendorId) |
+| `vendorId` | string | No | The vendor ID (use this or productId) |
+
+### Customer ID Examples
+
+| Category | Customer ID |
+|----------|-------------|
+| Airtime | Phone number (e.g., 08012345678) |
+| Mobile Data | Phone number |
+| Cable TV | Smartcard/decoder number |
+| Electricity | Meter number |
+
+<Callout type="info">
+Each product includes a `customerIdLabel` property with a description of the identifier. You can display this label next to the input field.
+</Callout>
+
+---
+
+## Create Bill Payment
+
+<Callout>
+**POST** `https://api.lenco.co/access/v1/bills`
+</Callout>
+
+### Request Body
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `productId` | string | Yes | The bill product ID |
+| `customerId` | string | Yes | Customer identifier |
+| `debitAccountId` | string | Yes | Your Lenco account ID to debit |
+| `amount` | float | No | Amount to pay (required for `range` type products) |
+| `reference` | string | No | Unique reference. Only `-`, `.`, `_` and alphanumeric characters allowed |
+
+### Example Request
+
+```bash
+curl --request POST \
+  --url https://api.lenco.co/access/v1/bills \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{
+    "productId": "PRODUCT_ID",
+    "customerId": "08012345678",
+    "debitAccountId": "YOUR_ACCOUNT_ID",
+    "amount": 1000,
+    "reference": "airtime-ref-12345"
+  }'
+```
+
+---
+
+## Get Bill Payment
+
+### By ID
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/bills/{id}`
+</Callout>
+
+### By Reference
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/bills/by-reference/{reference}`
+</Callout>
+
+---
+
+## List Bill Payments
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/bills`
+</Callout>
+
+### Query Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `page` | integer | 1 | The page number to retrieve |
+
+---
+
+## Webhook Notifications
+
+You'll receive webhook notifications when bill payments complete:
+
+| Event | Description |
+|-------|-------------|
+| `bill-payment.successful` | Bill payment completed successfully |
+| `bill-payment.failed` | Bill payment failed |
+
+See [Webhooks](/docs/webhooks) for more details.

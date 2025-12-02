@@ -1,0 +1,240 @@
+---
+title: Webhooks
+description: Listen to events in real-time
+---
+
+# Webhooks
+
+Learn how to listen to events whenever certain actions occur on your integration.
+
+## What are Webhooks?
+
+Whenever certain transaction actions occur on your Lenco API integration, we trigger events which your application can listen to. A webhook is a URL on your server where we send payloads for such events.
+
+For example, if you implement webhooks, once a transaction is successful, we will immediately notify your server with a `transaction.successful` event.
+
+<Callout type="info">
+To set up your webhook URL, kindly reach out to [support@lenco.ng](mailto:support@lenco.ng)
+</Callout>
+
+## Important Notes
+
+<Callout type="warn">
+Not in all cases would you be able to rely completely on webhooks to get notified. If your server is experiencing downtime, webhook calls will fail.
+
+We advise that developers set up a re-query service that polls for transaction status at regular intervals (e.g., every 30 minutes) using the `/transactions/:id` or `/transactions-by-reference/:reference` endpoint, until a successful or failed response is returned.
+</Callout>
+
+### Webhook URL Requirements
+
+1. If using `.htaccess`, remember to add the trailing `/` to the URL
+2. Do a test POST to your URL and ensure the script receives the POST body
+3. Ensure your webhook URL is publicly available (localhost URLs cannot receive events)
+
+## Receiving an Event
+
+Create an unauthenticated POST route on your application. The event object is sent as JSON in the request body.
+
+### Node.js Example
+
+```javascript
+// Using Express
+app.post("/my/webhook/url", function(req, res) {
+    // Retrieve the request's body
+    var event = req.body;
+    
+    // Do something with event
+    
+    res.send(200);
+});
+```
+
+### PHP Example
+
+```php
+<?php
+// Retrieve the request's body
+$input = @file_get_contents("php://input");
+$event = json_decode($input);
+
+// Do something with event
+
+http_response_code(200);
+```
+
+## Verifying Events
+
+It is important to verify that events originate from Lenco to avoid delivering value based on a counterfeit event.
+
+Valid events are raised with an header `X-Lenco-Signature` which is a HMAC SHA512 signature of the event payload signed using your `webhook_hash_key`.
+
+The `webhook_hash_key` is a SHA256 hash of your API token.
+
+### Node.js Verification
+
+```javascript
+var crypto = require('crypto');
+var secret = process.env.SECRET_KEY;
+var webhookHashKey = crypto.createHash("sha256").update(secret).digest("hex");
+
+// Using Express
+app.post("/my/webhook/url", function(req, res) {
+    // Validate event
+    var hash = crypto.createHmac('sha512', webhookHashKey)
+        .update(JSON.stringify(req.body))
+        .digest('hex');
+    
+    if (hash === req.headers['x-lenco-signature']) {
+        // Retrieve the request's body
+        var event = req.body;
+        // Do something with event  
+    }
+    
+    res.send(200);
+});
+```
+
+### PHP Verification
+
+```php
+<?php
+$secret = getenv('SECRET_KEY');
+$webhookHashKey = hash('sha256', $secret);
+
+$input = @file_get_contents("php://input");
+$hash = hash_hmac('sha512', $input, $webhookHashKey);
+
+if ($hash === $_SERVER['HTTP_X_LENCO_SIGNATURE']) {
+    $event = json_decode($input);
+    // Do something with event
+}
+
+http_response_code(200);
+```
+
+## Responding to an Event
+
+You should respond to an event with a `200 OK`. We consider this an acknowledgement by your application.
+
+If your application responds with any status outside of `200`, `201`, or `202`, we will consider it unacknowledged and continue to send it **every hour for 24 hours**.
+
+<Callout type="info">
+You don't need to send a request body - we only pay attention to the status code.
+</Callout>
+
+If your application is likely to start a long-running task in response to the event, respond immediately with a `200` before performing the rest of the task. This prevents timeouts and duplicate events.
+
+## Types of Events
+
+| Event | Description |
+|-------|-------------|
+| `transaction.successful` | A transaction was successfully completed |
+| `transaction.failed` | A transaction you attempted has failed |
+| `account.balance-updated` | The balance of an account has changed |
+| `virtual-account.transaction` | A virtual account received a successful credit transfer |
+| `virtual-account.transaction.settled` | Your account was credited for a virtual account transaction |
+| `virtual-account.rejected-transaction` | A transfer into a virtual account was rejected |
+| `bill-payment.successful` | A bill payment completed successfully |
+| `bill-payment.failed` | A bill payment has failed |
+| `pos-transaction` | A POS transaction has taken place |
+| `pos-transaction.settled` | Your account was credited for a POS transaction |
+| `pos-terminal.updated` | An assigned POS terminal has been updated |
+
+## Event Payloads
+
+### transaction.successful
+
+```json
+{
+  "event": "transaction.successful",
+  "data": {
+    "id": "string",
+    "amount": "string",
+    "fee": "string",
+    "narration": "string",
+    "type": "credit" | "debit",
+    "initiatedAt": "date-time" | null,
+    "completedAt": "date-time",
+    "accountId": "string",
+    "details": {
+      "accountName": "string",
+      "accountNumber": "string",
+      "bank": {
+        "code": "string",
+        "name": "string"
+      }
+    } | null,
+    "status": "successful",
+    "failedAt": null,
+    "reasonForFailure": null,
+    "clientReference": "string" | null,
+    "transactionReference": "string",
+    "nipSessionId": "string" | null
+  }
+}
+```
+
+### transaction.failed
+
+```json
+{
+  "event": "transaction.failed",
+  "data": {
+    "id": "string",
+    "amount": "string",
+    "fee": "string",
+    "narration": "string",
+    "type": "debit",
+    "initiatedAt": "date-time",
+    "completedAt": null,
+    "accountId": "string",
+    "details": {
+      "accountName": "string",
+      "accountNumber": "string",
+      "bank": {
+        "code": "string",
+        "name": "string"
+      }
+    },
+    "status": "failed",
+    "failedAt": "date-time",
+    "reasonForFailure": "string",
+    "clientReference": "string" | null,
+    "transactionReference": "string",
+    "nipSessionId": "string" | null
+  }
+}
+```
+
+### account.balance-updated
+
+```json
+{
+  "event": "account.balance-updated",
+  "data": {
+    "accountId": "string",
+    "availableBalance": "string",
+    "currentBalance": "string",
+    "currency": "string"
+  }
+}
+```
+
+### virtual-account.transaction
+
+```json
+{
+  "event": "virtual-account.transaction",
+  "data": {
+    "id": "string",
+    "virtualAccountId": "string",
+    "accountReference": "string",
+    "amount": "string",
+    "senderAccountName": "string",
+    "senderAccountNumber": "string",
+    "senderBankName": "string",
+    "transactionReference": "string",
+    "createdAt": "date-time"
+  }
+}
+```

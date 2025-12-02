@@ -1,0 +1,139 @@
+---
+title: Recipients
+description: Manage transfer recipients for your transactions
+---
+
+# Recipients
+
+Recipients are saved bank account details that you can use for transfers without re-entering the information each time.
+
+## List All Recipients
+
+Retrieve information about all your recipients.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/recipients`
+</Callout>
+
+### Query Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `page` | integer | 1 | The page number to retrieve |
+
+### Response Schema
+
+```json
+{
+  "status": true,
+  "message": "string",
+  "data": [
+    {
+      "id": "string",
+      "name": "string",
+      "currency": "string",
+      "bankAccount": {
+        "accountName": "string",
+        "accountNumber": "string",
+        "bank": {
+          "code": "string",
+          "name": "string"
+        }
+      }
+    }
+  ],
+  "meta": {
+    "total": 0,
+    "pageCount": 0,
+    "perPage": 50,
+    "currentPage": 1
+  }
+}
+```
+
+### Example Request
+
+```bash
+curl --request GET \
+  --url 'https://api.lenco.co/access/v1/recipients?page=1' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json'
+```
+
+---
+
+## Get Recipient by ID
+
+Retrieve information about a specific recipient.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/recipient/{id}`
+</Callout>
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | The recipient ID |
+
+### Example Request
+
+```bash
+curl --request GET \
+  --url https://api.lenco.co/access/v1/recipient/RECIPIENT_ID \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json'
+```
+
+---
+
+## Create Recipient
+
+Create a new recipient.
+
+<Callout>
+**POST** `https://api.lenco.co/access/v1/recipients`
+</Callout>
+
+### Request Body
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `accountNumber` | string | Yes | 10-digit NUBAN account number |
+| `bankCode` | string | Yes | The bank code (see [Banks](/docs/banks)) |
+
+### Response Schema
+
+```json
+{
+  "status": true,
+  "message": "string",
+  "data": {
+    "id": "string",
+    "name": "string",
+    "currency": "string",
+    "bankAccount": {
+      "accountName": "string",
+      "accountNumber": "string",
+      "bank": {
+        "code": "string",
+        "name": "string"
+      }
+    }
+  }
+}
+```
+
+### Example Request
+
+```bash
+curl --request POST \
+  --url https://api.lenco.co/access/v1/recipients \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{
+    "accountNumber": "0123456789",
+    "bankCode": "058"
+  }'
+```
