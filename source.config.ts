@@ -9,7 +9,8 @@ export const blog = defineDocs({
   dir: 'content/blog',
   docs: {
     schema: frontmatterSchema.extend({
-      date: z.string(),
+      // Date must follow exact YYYY-MM-DD (ISO date without time) to keep frontmatter consistent
+      date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format'),
       // Allowed tag set — make this strict so frontmatter must use canonical tags
       tags: z.array(z.enum([
         'Getting Started',
