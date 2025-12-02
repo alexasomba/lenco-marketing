@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { TypingAnimation } from '@/components/ui/typing-animation'
+
 import {
   Check,
   Phone,
@@ -23,13 +24,13 @@ import {
   Wifi,
   Smartphone,
   ArrowRight,
+  ChevronRight,
+  ChevronsRight,
   Building2,
   Users,
   CreditCard,
   TrendingUp,
   CircleDollarSign,
-  Apple,
-  Play,
 } from 'lucide-react'
 
 export const Route = createFileRoute('/')({ component: LencoLandingPage })
@@ -91,11 +92,19 @@ function LencoLandingPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="pt-16 pb-20 px-4 sm:px-6 lg:px-8 bg-linear-to-b from-slate-50 to-white">
-        <div className="max-w-7xl mx-auto text-center">
+      <section className="pt-16 pb-20 px-4 sm:px-6 lg:px-8 bg-linear-to-b from-slate-50 to-white relative overflow-hidden">
+        {/* Subtle dot pattern background */}
+        <div 
+          className="absolute inset-0 opacity-[0.03]" 
+          style={{
+            backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)',
+            backgroundSize: '24px 24px'
+          }}
+        />
+        <div className="max-w-7xl mx-auto text-center relative z-10">
           <p className="text-blue-600 font-medium mb-4">Meet Lenco</p>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-            All-in-one finance
+            <span className="bg-linear-to-r from-gray-900 via-gray-700 to-gray-900 bg-clip-text text-transparent">All-in-one finance</span>
             <br />
             built for{' '}
             <TypingAnimation
@@ -195,8 +204,9 @@ function LencoLandingPage() {
       {/* Not a Bank Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Lenco is not a bank. We are better!
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <span className="bg-linear-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">Lenco is not a bank.</span>{' '}
+            <span className="text-gray-900">We are better!</span>
           </h2>
           <p className="text-gray-600 text-lg">
             Built for Startups, Sole Traders, SMBs and Freelancers.
@@ -205,8 +215,16 @@ function LencoLandingPage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
-        <div className="max-w-7xl mx-auto space-y-32">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 relative overflow-hidden">
+        {/* Subtle grid pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.02]" 
+          style={{
+            backgroundImage: 'linear-gradient(#3b82f6 1px, transparent 1px), linear-gradient(90deg, #3b82f6 1px, transparent 1px)',
+            backgroundSize: '48px 48px'
+          }}
+        />
+        <div className="max-w-7xl mx-auto space-y-32 relative z-10">
           {/* Business Current Account */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -220,11 +238,11 @@ function LencoLandingPage() {
                 Learn More <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
             </div>
-            <Card className="shadow-lg border-gray-100">
+            <Card className="shadow-lg border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-blue-200 group">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                    <Landmark className="w-4 h-4 text-blue-600" />
+                    <Landmark className="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
                     Current Account
                   </CardTitle>
                   <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full">Active</span>
@@ -255,10 +273,10 @@ function LencoLandingPage() {
 
           {/* Pay Bills */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <Card className="order-2 lg:order-1 shadow-lg border-gray-100">
+            <Card className="order-2 lg:order-1 shadow-lg border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-blue-200 group">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                  <Receipt className="w-4 h-4 text-blue-600" />
+                  <Receipt className="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
                   Bill Payments
                 </CardTitle>
               </CardHeader>
@@ -318,10 +336,10 @@ function LencoLandingPage() {
                 Learn More <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
             </div>
-            <Card className="shadow-lg border-gray-100">
+            <Card className="shadow-lg border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-blue-200 group">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-blue-600" />
+                  <Users className="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
                   Beneficiaries
                 </CardTitle>
               </CardHeader>
@@ -363,10 +381,10 @@ function LencoLandingPage() {
 
           {/* Expense Management */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <Card className="order-2 lg:order-1 shadow-lg border-gray-100">
+            <Card className="order-2 lg:order-1 shadow-lg border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-blue-200 group">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                  <PieChart className="w-4 h-4 text-blue-600" />
+                  <PieChart className="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
                   Transactions
                 </CardTitle>
               </CardHeader>
@@ -420,13 +438,14 @@ function LencoLandingPage() {
       {/* Trust Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-12">
-            Your smart business account is backed by
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
+            <span className="text-gray-900">Your smart business account is </span>
+            <span className="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">backed by</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="text-center border-0 shadow-none bg-transparent">
+            <Card className="text-center border-0 shadow-none bg-transparent group">
               <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:bg-blue-200 transition-all duration-300">
                   <Shield className="w-8 h-8 text-blue-600" />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">Maximum Trust</h3>
@@ -435,9 +454,9 @@ function LencoLandingPage() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="text-center border-0 shadow-none bg-transparent">
+            <Card className="text-center border-0 shadow-none bg-transparent group">
               <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:bg-blue-200 transition-all duration-300">
                   <Lock className="w-8 h-8 text-blue-600" />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">Maximum Security</h3>
@@ -446,9 +465,9 @@ function LencoLandingPage() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="text-center border-0 shadow-none bg-transparent">
+            <Card className="text-center border-0 shadow-none bg-transparent group">
               <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:bg-blue-200 transition-all duration-300">
                   <ShieldCheck className="w-8 h-8 text-blue-600" />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">Maximum Safety</h3>
@@ -462,12 +481,20 @@ function LencoLandingPage() {
       </section>
 
       {/* We are Free Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-blue-900 text-white">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-blue-900 text-white relative overflow-hidden">
+        {/* Subtle pattern overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.05]" 
+          style={{
+            backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
+            backgroundSize: '32px 32px'
+          }}
+        />
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-8">
-                We are Free.
+                <span className="bg-linear-to-r from-green-400 via-emerald-300 to-green-400 bg-clip-text text-transparent">We are Free.</span>
               </h2>
               <ul className="space-y-4">
                 {[
@@ -516,35 +543,50 @@ function LencoLandingPage() {
       </section>
 
       {/* Get Started Steps */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-16">
-            Get started with Lenco
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 relative overflow-hidden">
+        {/* Subtle dot pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.02]" 
+          style={{
+            backgroundImage: 'radial-gradient(circle, #3b82f6 1.5px, transparent 1.5px)',
+            backgroundSize: '20px 20px'
+          }}
+        />
+        <div className="max-w-7xl mx-auto text-center relative z-10">
+          <h2 className="text-3xl md:text-4xl font-bold mb-16">
+            <span className="text-gray-900">Get started with </span>
+            <span className="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Lenco</span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
-            {/* Connection lines for desktop */}
-            <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-blue-200"></div>
-            
+          <div className="grid grid-cols-1 md:grid-cols-7 gap-4 md:gap-0 relative items-start">
             {[
-              { num: '1', title: 'Sign up in few minutes', desc: 'Quick and easy registration process' },
+              { num: '1', title: 'Sign up in a few minutes', desc: 'Quick and easy registration process' },
               { num: '2', title: 'Tell us about your business', desc: 'Provide your business details' },
               { num: '3', title: 'Verify your business and personal identity', desc: 'Complete verification process' },
-              { num: '4', title: 'Get approved in mere seconds. Get Started', desc: 'Start using your account' },
+              { num: '4', title: 'Your account is ready! Get started', desc: 'Start using your account' },
             ].map((step, index) => (
-              <div key={index} className="relative">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 relative z-10">
-                  <span className="text-2xl font-bold text-blue-600">{step.num}</span>
+              <>
+                <div key={index} className="relative flex flex-col items-center">
+                  {/* Large Step Number */}
+                  <span className="text-7xl md:text-8xl font-bold text-blue-200 mb-4 select-none">
+                    {step.num}
+                  </span>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-center px-2">{step.title}</h3>
+                  <p className="text-sm text-gray-500 text-center px-2">{step.desc}</p>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{step.title}</h3>
-                <p className="text-sm text-gray-600">{step.desc}</p>
-              </div>
+                {/* Chevron connector - hidden on last item and mobile */}
+                {index < 3 && (
+                  <div className="hidden md:flex items-center justify-center self-start mt-8">
+                    <ChevronsRight className="w-8 h-8 text-blue-300" />
+                  </div>
+                )}
+              </>
             ))}
           </div>
           <Button 
             size="lg" 
-            className="mt-12 bg-blue-600 hover:bg-blue-700 font-semibold"
+            className="mt-12 bg-blue-600 hover:bg-blue-700 font-semibold rounded-xl px-8"
           >
-            Get Started Online
+            Get Started in 10mins
           </Button>
         </div>
       </section>
@@ -552,22 +594,23 @@ function LencoLandingPage() {
       {/* Testimonials */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-12">
-            A banking experience businesses love
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+            <span className="text-gray-900">A banking experience </span>
+            <span className="bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">businesses love</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-slate-50 border-0 shadow-none">
+              <Card key={index} className="bg-slate-50 border-0 shadow-none hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
-                      {testimonial.name.charAt(0)}
+                      <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+                        {testimonial.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900">{testimonial.name}</p>
+                        <p className="text-sm text-gray-500">{testimonial.role}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                      <p className="text-sm text-gray-500">{testimonial.role}</p>
-                    </div>
-                  </div>
                   <p className="text-gray-600 text-sm leading-relaxed">{testimonial.content}</p>
                 </CardContent>
               </Card>
@@ -577,70 +620,155 @@ function LencoLandingPage() {
       </section>
 
       {/* Mobile App Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 relative overflow-hidden">
+        {/* Subtle dot pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.02]" 
+          style={{
+            backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)',
+            backgroundSize: '20px 20px'
+          }}
+        />
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Take your business with you anywhere you go
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                <span className="text-gray-900">Take your business with you<br /></span>
+                <span className="text-gray-900">anywhere you go</span>
               </h2>
-              <p className="text-gray-600 mb-4 font-medium">Download the Lenco mobile app</p>
-              <p className="text-gray-500 text-sm mb-8 leading-relaxed">
-                Full business banking available to you on the go in Lenco. Everything from banking, and invoicing to payments, sending and receiving money to business-specific features.
+              <p className="text-gray-900 mb-2 font-semibold">Lenco business mobile app.</p>
+              <p className="text-gray-500 text-sm mb-8 leading-relaxed max-w-md">
+                Your business banking available to you on-the-go to handle everything from making and approving payments, to checking balances, seeing your business performance, sending invoices and lots more.
               </p>
               <div className="flex gap-4">
-                <Button 
-                  className="bg-black hover:bg-gray-800 text-white h-14 px-5"
+                <a 
+                  href="#"
+                  className="inline-flex items-center gap-3 px-5 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                  <Apple className="w-6 h-6 mr-3" />
+                  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                  </svg>
                   <div className="text-left">
-                    <p className="text-[10px] leading-tight opacity-80">Download on the</p>
-                    <p className="font-semibold text-sm">App Store</p>
+                    <p className="text-[10px] leading-tight text-gray-500">Download on the</p>
+                    <p className="font-semibold text-sm text-gray-900">App Store</p>
                   </div>
-                </Button>
-                <Button 
-                  className="bg-black hover:bg-gray-800 text-white h-14 px-5"
+                </a>
+                <a 
+                  href="#"
+                  className="inline-flex items-center gap-3 px-5 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                  <Play className="w-6 h-6 mr-3" />
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 010 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/>
+                  </svg>
                   <div className="text-left">
-                    <p className="text-[10px] leading-tight opacity-80">Get it on</p>
-                    <p className="font-semibold text-sm">Google Play</p>
+                    <p className="text-[10px] leading-tight text-gray-500">GET IT ON</p>
+                    <p className="font-semibold text-sm text-gray-900">Google Play</p>
                   </div>
-                </Button>
+                </a>
               </div>
             </div>
-            <div className="flex justify-center">
-              <div className="w-64 h-[500px] bg-gray-900 rounded-[3rem] p-3 shadow-2xl">
-                <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden flex flex-col">
-                  <div className="bg-blue-600 text-white p-6 text-center">
-                    <p className="text-xs opacity-80 mb-1">Bill Payment</p>
-                    <p className="text-2xl font-bold">₦4,200,000</p>
+            {/* Two overlapping phone mockups */}
+            <div className="flex justify-center lg:justify-end relative h-[500px]">
+              {/* Back phone - Bill Payment screen */}
+              <div className="absolute right-0 top-0 w-[220px] md:w-[260px]">
+                <div className="bg-white rounded-[40px] shadow-2xl border border-gray-200 overflow-hidden">
+                  {/* Phone notch area */}
+                  <div className="bg-white px-6 py-2 flex justify-between items-center text-xs">
+                    <span className="text-gray-900 font-medium">17:59</span>
+                    <div className="w-20 h-6 bg-black rounded-full"></div>
+                    <div className="flex items-center gap-1">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3C7.46 3 3.34 4.78.29 7.67c-.18.18-.29.43-.29.71s.11.53.29.71l2.48 2.48c.18.18.43.29.71.29.27 0 .52-.11.7-.28.79-.74 1.69-1.36 2.66-1.85.33-.16.56-.5.56-.9v-3.1c1.45-.48 3-.73 4.6-.73s3.15.25 4.6.73v3.1c0 .39.23.74.56.9.98.49 1.87 1.12 2.67 1.85.18.18.43.28.7.28.28 0 .53-.11.71-.29l2.48-2.48c.18-.18.29-.43.29-.71s-.11-.53-.29-.71C20.66 4.78 16.54 3 12 3z"/></svg>
+                    </div>
                   </div>
-                  <div className="flex-1 p-4 bg-slate-50">
-                    <p className="text-xs text-gray-500 mb-3 font-medium">Recent Payments</p>
-                    <div className="space-y-2">
-                      <Card className="shadow-sm">
-                        <CardContent className="p-3 flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-                              <Tv className="w-4 h-4 text-amber-600" />
-                            </div>
-                            <span className="text-sm font-medium">Electricity</span>
-                          </div>
-                          <span className="text-xs text-gray-500">₦25,000</span>
-                        </CardContent>
-                      </Card>
-                      <Card className="shadow-sm">
-                        <CardContent className="p-3 flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                              <Wifi className="w-4 h-4 text-purple-600" />
-                            </div>
-                            <span className="text-sm font-medium">Internet</span>
-                          </div>
-                          <span className="text-xs text-gray-500">₦15,000</span>
-                        </CardContent>
-                      </Card>
+                  {/* Screen content */}
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4">Bill Payment</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                          <Smartphone className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <span className="font-medium text-gray-900">Buy Airtime</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                        <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                          <Wifi className="w-5 h-5 text-purple-600" />
+                        </div>
+                        <span className="font-medium text-gray-900">Data</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                        <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
+                          <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                        </div>
+                        <span className="font-medium text-gray-900">Electricity</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                          <Tv className="w-5 h-5 text-green-600" />
+                        </div>
+                        <span className="font-medium text-gray-900">Cable TV</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                        <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                          <CreditCard className="w-5 h-5 text-indigo-600" />
+                        </div>
+                        <span className="font-medium text-gray-900">Cards</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Front phone - Dashboard screen */}
+              <div className="absolute left-0 lg:left-auto lg:right-32 top-16 w-[220px] md:w-[260px] z-10">
+                <div className="bg-white rounded-[40px] shadow-2xl border border-gray-200 overflow-hidden">
+                  {/* Phone notch area */}
+                  <div className="bg-white px-6 py-2 flex justify-between items-center text-xs">
+                    <span className="text-gray-900 font-medium">17:59</span>
+                    <div className="w-20 h-6 bg-black rounded-full"></div>
+                    <div className="flex items-center gap-1">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3C7.46 3 3.34 4.78.29 7.67c-.18.18-.29.43-.29.71s.11.53.29.71l2.48 2.48c.18.18.43.29.71.29.27 0 .52-.11.7-.28.79-.74 1.69-1.36 2.66-1.85.33-.16.56-.5.56-.9v-3.1c1.45-.48 3-.73 4.6-.73s3.15.25 4.6.73v3.1c0 .39.23.74.56.9.98.49 1.87 1.12 2.67 1.85.18.18.43.28.7.28.28 0 .53-.11.71-.29l2.48-2.48c.18-.18.29-.43.29-.71s-.11-.53-.29-.71C20.66 4.78 16.54 3 12 3z"/></svg>
+                    </div>
+                  </div>
+                  {/* Screen content */}
+                  <div className="p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <p className="text-gray-500 text-sm">Hello, <span className="text-gray-900 font-semibold">Oga Venue...</span></p>
+                      </div>
+                      <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                        <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                      </div>
+                    </div>
+                    <div className="mb-4">
+                      <p className="text-xs text-gray-400 flex items-center gap-1">
+                        Total Balance
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">₦24,000,000</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl p-4">
+                      <p className="text-xs text-gray-500 mb-3">Insight for the Month</p>
+                      <div className="flex justify-between mb-3">
+                        <div>
+                          <p className="text-xs text-gray-400 flex items-center gap-1">Money in <span className="text-green-500">✓</span></p>
+                          <p className="font-semibold text-gray-900">₦12,000,000</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs text-gray-400 flex items-center justify-end gap-1">Money out <span className="text-red-500">↗</span></p>
+                          <p className="font-semibold text-gray-900">₦2,564,000</p>
+                        </div>
+                      </div>
+                      {/* Simple chart representation */}
+                      <div className="h-16 flex items-end gap-1">
+                        <div className="flex-1 bg-blue-100 rounded-t" style={{height: '40%'}}></div>
+                        <div className="flex-1 bg-blue-100 rounded-t" style={{height: '60%'}}></div>
+                        <div className="flex-1 bg-blue-100 rounded-t" style={{height: '45%'}}></div>
+                        <div className="flex-1 bg-blue-100 rounded-t" style={{height: '80%'}}></div>
+                        <div className="flex-1 bg-blue-100 rounded-t" style={{height: '55%'}}></div>
+                        <div className="flex-1 bg-blue-200 rounded-t" style={{height: '70%'}}></div>
+                        <div className="flex-1 bg-blue-300 rounded-t" style={{height: '90%'}}></div>
+                      </div>
                     </div>
                   </div>
                 </div>
