@@ -32,8 +32,8 @@ export const blog = defineDocs({
       // Strict enum validation for author metadata — keeps the author list canonical
       author: z.union([
         z.enum(['Alex Asomba', 'Lenco Team']),
-        z.object({ name: z.enum(['Alex Asomba', 'Lenco Team']), avatar: z.string().regex(/^\/images\/authors\/.+\.(svg|png|jpe?g)$/).optional(), position: z.enum(['Writer', 'Editorial']) }),
-        z.array(z.object({ name: z.enum(['Alex Asomba', 'Lenco Team']), avatar: z.string().regex(/^\/images\/authors\/.+\.(svg|png|jpe?g)$/).optional(), position: z.enum(['Writer', 'Editorial']) })),
+        z.object({ name: z.enum(['Alex Asomba', 'Lenco Team']), avatar: z.string().regex(/^\/images\/authors\/.+\.(svg|png|jpe?g)$/).optional(), position: z.enum(['Writer', 'Editorial', 'Contributor', 'Editor', 'Guest', 'Staff', 'Author']) }),
+        z.array(z.object({ name: z.enum(['Alex Asomba', 'Lenco Team']), avatar: z.string().regex(/^\/images\/authors\/.+\.(svg|png|jpe?g)$/).optional(), position: z.enum(['Writer', 'Editorial', 'Contributor', 'Editor', 'Guest', 'Staff', 'Author']) })),
       ]).optional(),
       thumbnail: z.string().optional(),
     }),
