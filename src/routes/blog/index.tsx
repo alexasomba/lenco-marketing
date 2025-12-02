@@ -1,9 +1,14 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import { blogSource } from '@/lib/blog-source';
-import { FlickeringGrid } from '@/components/magicui/flickering-grid';
-import { BlogCard } from '@/components/blog/blog-card';
-import { TagFilter } from '@/components/blog/tag-filter';
+import { FeaturedSlider } from '@/components/blog/featured-slider';
+import { NewsletterSection } from '@/components/blog/newsletter-section';
+import { TrendingTags } from '@/components/blog/trending-tags';
+import { FeaturedHero } from '@/components/blog/featured-hero';
+import { PostGrid } from '@/components/blog/post-grid';
+import { ResourcesSection } from '@/components/blog/resources-section';
+import { RecentPostsGrid } from '@/components/blog/recent-posts-grid';
+import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/blog/')({
   component: BlogIndexPage,
@@ -67,91 +72,156 @@ const serverLoader = createServerFn({
     return acc;
   }, {} as Record<string, number>);
 
-  return { posts: blogPages, allTags, tagCounts };
+  // Get featured posts
+  const featuredPosts = blogPages.filter((post) => post.featured);
+
+  return { posts: blogPages, allTags, tagCounts, featuredPosts };
 });
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
   });
 }
 
 function BlogIndexPage() {
-  const { posts, allTags, tagCounts } = Route.useLoaderData();
+  const { posts, allTags, featuredPosts } = Route.useLoaderData();
   const { tag: selectedTag } = Route.useSearch();
 
+  // Format dates for display
+  const formattedPosts = posts.map((post) => ({
+    ...post,
+    date: formatDate(post.date),
+  }));
+
+  const formattedFeaturedPosts = featuredPosts.map((post) => ({
+    ...post,
+    date: formatDate(post.date),
+  }));
+
+  // Filter posts if tag is selected
   const filteredPosts = selectedTag === 'All'
-    ? posts
-    : posts.filter((post) => post.tags?.includes(selectedTag));
+    ? formattedPosts
+    : formattedPosts.filter((post) => post.tags?.includes(selectedTag));
+
+  // Get the main featured post (most recent featured)
+  const mainFeaturedPost = formattedFeaturedPosts[0];
+
+  // Get posts for different sections
+  const sliderPosts = formattedPosts.slice(0, 8);
+  const gridPosts = filteredPosts.slice(0, 4);
+  const recentPosts = formattedPosts.slice(0, 6);
 
   return (
-    <div className="min-h-screen bg-background relative">
-      {/* Flickering Grid Background */}
-      <div className="absolute top-0 left-0 z-0 w-full h-[200px] [mask-image:linear-gradient(to_top,transparent_25%,black_95%)]">
-        <FlickeringGrid
-          className="absolute top-0 left-0 size-full"
-          squareSize={4}
-          gridGap={6}
-          color="#6B7280"
-          maxOpacity={0.2}
-          flickerChance={0.05}
-        />
+    <div className="min-h-screen bg-background">
+      {/* Featured posts slider */}
+      <div className="border-b border-border py-4 px-6">
+        <div className="max-w-7xl mx-auto">
+          <FeaturedSlider posts={sliderPosts} />
+        </div>
       </div>
 
-      {/* Header Section */}
-      <div className="p-6 border-b border-border flex flex-col gap-6 min-h-[250px] justify-center relative z-10">
-        <div className="max-w-7xl mx-auto w-full">
-          <div className="flex flex-col gap-2">
-            <h1 className="font-medium text-4xl md:text-5xl tracking-tighter">
-              Lenco Blog
-            </h1>
-            <p className="text-muted-foreground text-sm md:text-base lg:text-lg">
-              Insights, tips, and updates on business finance and growing your business in Nigeria.
-            </p>
+      {/* Newsletter Section */}
+      <NewsletterSection />
+
+      {/* Trending Tags */}
+      <TrendingTags tags={allTags} />
+
+      {/* Featured Hero Post */}
+      {mainFeaturedPost && <FeaturedHero post={mainFeaturedPost} />}
+
+      {/* Post Grid with tag filter indicator */}
+      {selectedTag !== 'All' ? (
+        <div className="py-10 px-6 bg-background">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Posts tagged with
+                </h3>
+                <span className="px-3 py-1 text-sm font-semibold bg-primary text-primary-foreground rounded-full">
+                  {selectedTag}
+                </span>
+              </div>
+              <Link to="/blog" search={{ tag: 'All' }}>
+                <Button variant="outline" size="sm">
+                  Clear filter
+                </Button>
+              </Link>
+            </div>
+
+            {filteredPosts.length === 0 ? (
+              <div className="py-20 text-center">
+                <p className="text-muted-foreground">No posts found with this tag.</p>
+              </div>
+            ) : (
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredPosts.map((post) => (
+                  <Link key={post.url} to={post.url} className="group block">
+                    <article className="h-full">
+                      <div className="relative aspect-16/10 rounded-xl overflow-hidden mb-4">
+                        {post.thumbnail ? (
+                          <img
+                            src={post.thumbnail}
+                            alt={post.title}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-muted" />
+                        )}
+                        {post.tags && post.tags.length > 0 && (
+                          <div className="absolute bottom-3 left-3">
+                            <span className="px-2.5 py-1 text-xs font-semibold uppercase tracking-wider bg-primary text-primary-foreground rounded-full">
+                              {post.tags[0]}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                          {post.title}
+                        </h3>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <span>{post.date}</span>
+                          {post.author && (
+                            <>
+                              <span>—</span>
+                              <span>{post.author}</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </article>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </div>
+      ) : (
+        <>
+          {/* Regular post grid */}
+          <PostGrid posts={gridPosts} columns={4} />
 
-        {/* Tag Filter */}
-        {allTags.length > 1 && (
-          <div className="max-w-7xl mx-auto w-full">
-            <TagFilter
-              tags={allTags}
-              selectedTag={selectedTag}
-              tagCounts={tagCounts}
-            />
-          </div>
-        )}
-      </div>
+          {/* Resources Section */}
+          <ResourcesSection />
 
-      {/* Blog Grid */}
-      <div className="max-w-7xl mx-auto w-full px-6 lg:px-0">
-        {filteredPosts.length === 0 ? (
-          <div className="py-20 text-center">
-            <p className="text-muted-foreground">No blog posts found. Check back soon!</p>
-          </div>
-        ) : (
-          <div
-            className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 relative overflow-hidden border-x border-border ${
-              filteredPosts.length < 4 ? 'border-b' : 'border-b-0'
-            }`}
-          >
-            {filteredPosts.map((post) => (
-              <BlogCard
-                key={post.url}
-                url={post.url}
-                title={post.title}
-                description={post.description || ''}
-                date={formatDate(post.date)}
-                thumbnail={post.thumbnail}
-                showRightBorder={filteredPosts.length < 3}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+          {/* Recent Posts */}
+          <RecentPostsGrid posts={recentPosts} />
+        </>
+      )}
+
+      {/* Load More Button */}
+      {filteredPosts.length > 6 && (
+        <div className="py-10 px-6 bg-background text-center">
+          <Button variant="outline" className="px-8">
+            Load More
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
