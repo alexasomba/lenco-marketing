@@ -6,9 +6,37 @@ import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
 import { cloudflare } from '@cloudflare/vite-plugin'
 import mdx from 'fumadocs-mdx/vite';
+import { visualizer } from 'rollup-plugin-visualizer';
 import * as MdxConfig from './source.config';
 
 const config = defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          // group node_modules into useful vendor bundles
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) return 'vendor-react';
+            // split some big libs that were showing up together in the visualizer
+            // so we can load them in their own chunks and reduce `main`
+            if (id.includes('motion') || id.includes('/motion/')) return 'vendor-motion';
+            if (id.includes('orama')) return 'vendor-orama';
+            if (id.includes('@floating-ui') || id.includes('floating-ui')) return 'vendor-floating';
+            if (id.includes('seroval') || id.includes('seroval-')) return 'vendor-serializer';
+            if (id.includes('@intercom') || id.includes('intercom')) return 'vendor-intercom';
+            if (id.includes('@tanstack')) return 'vendor-tanstack';
+            if (id.includes('fumadocs-mdx') || id.includes('fumadocs-core') || id.includes('fumadocs-ui') || id.includes('mdx')) return 'vendor-fumadocs';
+            if (id.includes('lucide-react') || id.includes('simple-icons') || id.includes('svg-dotted-map')) return 'vendor-icons';
+            if (id.includes('tailwind-merge') || id.includes('tailwindcss') || id.includes('@tailwindcss')) return 'vendor-tailwind';
+            return 'vendor';
+          }
+
+          // apps often share components and lib code across pages
+          if (id.includes('/src/components/') || id.includes('/src/lib/')) return 'app-shared';
+        },
+      },
+    },
+  },
   plugins: [
     devtools(),
     cloudflare({ viteEnvironment: { name: 'ssr' } }),
@@ -20,6 +48,9 @@ const config = defineConfig({
     tanstackStart(),
     viteReact(),
     mdx(MdxConfig),
+    // add the visualizer plugin when ANALYZE=true so we can generate a report
+    // in dist/stats.html without affecting normal builds
+    ...(process.env.ANALYZE === 'true' ? [visualizer({ filename: 'dist/stats.html', gzipSize: true })] : []),
   ],
 })
 

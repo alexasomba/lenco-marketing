@@ -1,0 +1,4 @@
+tags:
+  - name: test
+    description: this is a tag.
+    x-displayName: My Test Name
