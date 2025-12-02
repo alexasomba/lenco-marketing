@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router';
+import { getLocalThumbnail } from '@/lib/utils';
 
 interface FeaturedHeroProps {
   post: {
@@ -28,15 +29,14 @@ export function FeaturedHero({ post }: FeaturedHeroProps) {
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             {/* Image */}
             <div className="relative aspect-16/10 rounded-2xl overflow-hidden shadow-lg ring-1 ring-border/50">
-              {post.thumbnail ? (
+              {
+                // Resolve thumbnail to local path (fallback to placeholder)
                 <img
-                  src={post.thumbnail}
+                  src={getLocalThumbnail(post.thumbnail)}
                   alt={post.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-              ) : (
-                <div className="w-full h-full bg-muted" />
-              )}
+              }
               {/* Overlay gradient */}
               <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>

@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router';
+import { getLocalThumbnail } from '@/lib/utils';
 
 interface BlogPost {
   url: string;
@@ -57,15 +58,13 @@ export function ReadMoreSection({ currentSlug, currentTags = [], posts }: ReadMo
               className="group block"
             >
               <article className="border border-border rounded-lg overflow-hidden bg-card hover:shadow-lg transition-shadow">
-                {post.thumbnail && (
-                  <div className="relative h-40 overflow-hidden">
-                    <img
-                      src={post.thumbnail}
-                      alt={post.title}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                )}
+                <div className="relative h-40 overflow-hidden">
+                  <img
+                    src={getLocalThumbnail(post.thumbnail)}
+                    alt={post.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
                 <div className="p-4">
                   <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
                     {post.title}

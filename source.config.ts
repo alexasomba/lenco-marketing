@@ -29,13 +29,16 @@ export const blog = defineDocs({
       featured: z.boolean().optional().default(false),
       // We'll use a numeric read time in minutes for stricter handling
       readTimeMinutes: z.number().int().positive().optional(),
-      // Strict enum validation for author metadata — keeps the author list canonical
+      // Authors are stored as aliases in frontmatter; the app will resolve alias -> author object
       author: z.union([
-        z.enum(['Alex Asomba', 'Lenco Team']),
-        z.object({ name: z.enum(['Alex Asomba', 'Lenco Team']), avatar: z.string().regex(/^\/images\/authors\/.+\.(svg|png|jpe?g)$/).optional(), position: z.enum(['Writer', 'Editorial', 'Contributor', 'Editor', 'Guest', 'Staff', 'Author']) }),
-        z.array(z.object({ name: z.enum(['Alex Asomba', 'Lenco Team']), avatar: z.string().regex(/^\/images\/authors\/.+\.(svg|png|jpe?g)$/).optional(), position: z.enum(['Writer', 'Editorial', 'Contributor', 'Editor', 'Guest', 'Staff', 'Author']) })),
+        z.enum(['alex-asomba', 'lenco-team']),
+        z.array(z.enum(['alex-asomba', 'lenco-team'])),
       ]).optional(),
-      thumbnail: z.string().optional(),
+      // Thumbnail must be a path to a local image under `/images/` (discourages external URLs)
+      thumbnail: z.string().optional().refine((val) => {
+        if (!val) return true;
+        return val.startsWith('/images/') || val.startsWith('images/');
+      }, { message: 'thumbnail must be a local image path under /images/ (not an external URL)' }),
     }),
   },
 });

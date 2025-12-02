@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router';
+import { getLocalThumbnail } from '@/lib/utils';
 
 interface Post {
   url: string;
@@ -34,15 +35,15 @@ export function PostGrid({ posts, title, columns = 3 }: PostGridProps) {
               <article className="h-full">
                 {/* Thumbnail */}
                 <div className="relative aspect-16/10 rounded-xl overflow-hidden mb-4 shadow-sm ring-1 ring-border/50 group-hover:shadow-lg group-hover:ring-border transition-all duration-300">
-                  {post.thumbnail ? (
+                  {
+                    // Always resolve the thumbnail to a local path. getLocalThumbnail
+                    // will return the placeholder for missing or external URLs.
                     <img
-                      src={post.thumbnail}
+                      src={getLocalThumbnail(post.thumbnail)}
                       alt={post.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                  ) : (
-                    <div className="w-full h-full bg-muted" />
-                  )}
+                  }
                   
                   {/* Tag badge */}
                   {post.tags && post.tags.length > 0 && (

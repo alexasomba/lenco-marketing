@@ -6,6 +6,7 @@ import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { FlickeringGrid } from '@/components/magicui/flickering-grid';
 import { TableOfContents } from '@/components/blog/table-of-contents';
 import { AuthorCard, AuthorsInline, AuthorsStack } from '@/components/blog/author-card';
+import { getAuthors } from '@/lib/authors';
 import { PromoContent } from '@/components/blog/promo-content';
 import { MobileTableOfContents } from '@/components/blog/mobile-toc';
 import { ReadMoreSection } from '@/components/blog/read-more-section';
@@ -13,6 +14,7 @@ import { ArrowLeft, Calendar, Clock, Mail, Copy } from 'lucide-react';
 import { siFacebook, siX, siWhatsapp } from 'simple-icons';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { getLocalThumbnail } from '@/lib/utils';
 
 export const Route = createFileRoute('/blog/$')({
   component: BlogPostPage,
@@ -65,7 +67,11 @@ const serverLoader = createServerFn({
       date: page.data.date,
       tags: page.data.tags,
       readTimeMinutes: page.data.readTimeMinutes,
-      author: page.data.author,
+      // Resolve author alias(es) to Author objects from the central registry
+      author: (() => {
+        const resolved = getAuthors(page.data.author as any);
+        return resolved.length === 1 ? resolved[0] : resolved;
+      })(),
       thumbnail: page.data.thumbnail,
       allPosts,
     };
@@ -185,17 +191,16 @@ function BlogPostPage() {
         {/* Article Content */}
         <main className="flex-1 min-w-0">
           {/* Featured Image */}
-          {data.thumbnail && (
-            <div className="p-6">
-              <div className="rounded-lg overflow-hidden border border-border">
-                <img
-                  src={data.thumbnail}
-                  alt={data.title}
-                  className="w-full h-auto object-cover"
-                />
-              </div>
+          {/* Render the thumbnail, resolving it to a local path (placeholder if missing / external) */}
+          <div className="p-6">
+            <div className="rounded-lg overflow-hidden border border-border">
+              <img
+                src={getLocalThumbnail(data.thumbnail)}
+                alt={data.title}
+                className="w-full h-auto object-cover"
+              />
             </div>
-          )}
+          </div>
 
           {/* Content */}
           <article className="p-6 lg:p-10">

@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router';
+import { getLocalThumbnail } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
 
 interface Post {
@@ -50,15 +51,13 @@ export function RecentPostsGrid({ posts }: RecentPostsGridProps) {
                 <article className="grid md:grid-cols-2 gap-6 items-center p-4 -m-4 rounded-2xl hover:bg-accent/50 transition-colors">
                   {/* Thumbnail */}
                   <div className="relative aspect-16/10 rounded-xl overflow-hidden shadow-sm ring-1 ring-border/50 group-hover:shadow-md transition-shadow">
-                    {post.thumbnail ? (
+                    {
                       <img
-                        src={post.thumbnail}
+                        src={getLocalThumbnail(post.thumbnail)}
                         alt={post.title}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                    ) : (
-                      <div className="w-full h-full bg-muted" />
-                    )}
+                    }
                     
                     {/* Tag badge */}
                     {post.tags && post.tags.length > 0 && (
@@ -104,15 +103,13 @@ export function RecentPostsGrid({ posts }: RecentPostsGridProps) {
               <Link key={post.url} to={post.url} className="group flex gap-4 p-2 rounded-xl hover:bg-background transition-colors">
                 {/* Thumbnail */}
                 <div className="relative w-20 h-20 shrink-0 rounded-lg overflow-hidden ring-1 ring-border/50">
-                  {post.thumbnail ? (
-                    <img
-                      src={post.thumbnail}
-                      alt={post.title}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-muted" />
-                  )}
+                    {
+                      <img
+                        src={getLocalThumbnail(post.thumbnail)}
+                        alt={post.title}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      />
+                    }
                 </div>
                 
                 {/* Content */}

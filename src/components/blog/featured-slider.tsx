@@ -1,6 +1,7 @@
 'use client';
 
 import { Link } from '@tanstack/react-router';
+import { getLocalThumbnail } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -53,15 +54,13 @@ export function FeaturedSlider({ posts }: FeaturedSliderProps) {
             >
               <Link to={post.url} className="group block">
                 <div className="flex gap-4 items-start p-3 rounded-xl hover:bg-accent/50 transition-colors">
-                  {post.thumbnail && (
-                    <div className="w-16 h-16 shrink-0 rounded-lg overflow-hidden shadow-sm ring-1 ring-border">
-                      <img
-                        src={post.thumbnail}
-                        alt={post.title}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                      />
-                    </div>
-                  )}
+                  <div className="w-16 h-16 shrink-0 rounded-lg overflow-hidden shadow-sm ring-1 ring-border">
+                    <img
+                      src={getLocalThumbnail(post.thumbnail)}
+                      alt={post.title}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-sm font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors leading-snug">
                       {post.title}

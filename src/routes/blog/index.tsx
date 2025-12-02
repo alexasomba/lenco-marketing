@@ -2,6 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import { blogSource } from '@/lib/blog-source';
 import { FeaturedSlider } from '@/components/blog/featured-slider';
+import { getLocalThumbnail } from '@/lib/utils';
 import { NewsletterSection } from '@/components/blog/newsletter-section';
 import { TrendingTags } from '@/components/blog/trending-tags';
 import { FeaturedHero } from '@/components/blog/featured-hero';
@@ -9,6 +10,7 @@ import { PostGrid } from '@/components/blog/post-grid';
 import { ResourcesSection } from '@/components/blog/resources-section';
 import { RecentPostsGrid } from '@/components/blog/recent-posts-grid';
 import { Button } from '@/components/ui/button';
+import { getAuthors } from '@/lib/authors';
 
 export const Route = createFileRoute('/blog/')({
   component: BlogIndexPage,
@@ -47,7 +49,11 @@ const serverLoader = createServerFn({
     tags: page.data.tags,
     featured: page.data.featured,
     readTimeMinutes: page.data.readTimeMinutes,
-    author: page.data.author,
+    // Resolve author alias(es) into author objects (single object or array)
+    author: (() => {
+      const resolved = getAuthors(page.data.author as any);
+      return resolved.length === 1 ? resolved[0] : resolved;
+    })(),
     thumbnail: page.data.thumbnail,
   }));
 
@@ -175,15 +181,13 @@ function BlogIndexPage() {
                   <Link key={post.url} to={post.url} className="group block">
                     <article className="h-full">
                       <div className="relative aspect-16/10 rounded-xl overflow-hidden mb-4">
-                        {post.thumbnail ? (
+                        {
                           <img
-                            src={post.thumbnail}
+                            src={getLocalThumbnail(post.thumbnail)}
                             alt={post.title}
                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           />
-                        ) : (
-                          <div className="w-full h-full bg-muted" />
-                        )}
+                        }
                         {post.tags && post.tags.length > 0 && (
                           <div className="absolute bottom-3 left-3">
                             <span className="px-2.5 py-1 text-xs font-semibold uppercase tracking-wider bg-primary text-primary-foreground rounded-full">
