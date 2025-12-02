@@ -14,8 +14,10 @@ const config = defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id: string) {
-          // group node_modules into useful vendor bundles
+          // Only group node_modules into vendor bundles
+          // Don't manually chunk app code - let Vite/Rollup handle it to preserve initialization order
           if (id.includes('node_modules')) {
+            // React must be in its own chunk and loaded first
             if (id.includes('react') || id.includes('react-dom')) return 'vendor-react';
             // split some big libs that were showing up together in the visualizer
             // so we can load them in their own chunks and reduce `main`
@@ -32,9 +34,7 @@ const config = defineConfig({
             if (id.includes('tailwind-merge') || id.includes('tailwindcss') || id.includes('@tailwindcss')) return 'vendor-tailwind';
             return 'vendor';
           }
-
-          // apps often share components and lib code across pages
-          if (id.includes('/src/components/') || id.includes('/src/lib/')) return 'app-shared';
+          // Let Vite handle app code chunking automatically
         },
       },
     },
