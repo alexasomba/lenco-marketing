@@ -22,7 +22,9 @@ const config = defineConfig({
             if (id.includes('motion') || id.includes('/motion/')) return 'vendor-motion';
             if (id.includes('orama')) return 'vendor-orama';
             if (id.includes('@floating-ui') || id.includes('floating-ui')) return 'vendor-floating';
-            if (id.includes('seroval') || id.includes('seroval-')) return 'vendor-serializer';
+            // seroval MUST be bundled with @tanstack to preserve initialization order
+            // of ShallowErrorPlugin and other plugins
+            if (id.includes('seroval') || id.includes('seroval-')) return 'vendor-tanstack';
             if (id.includes('@intercom') || id.includes('intercom')) return 'vendor-intercom';
             if (id.includes('@tanstack')) return 'vendor-tanstack';
             if (id.includes('fumadocs-mdx') || id.includes('fumadocs-core') || id.includes('fumadocs-ui') || id.includes('mdx')) return 'vendor-fumadocs';

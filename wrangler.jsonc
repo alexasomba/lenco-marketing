@@ -12,6 +12,14 @@
 	"main": "@tanstack/react-start/server-entry",
 	"observability": {
 		"enabled": true
+	},
+	/**
+	 * Static Assets
+	 * https://developers.cloudflare.com/workers/static-assets/binding/
+	 */
+	"assets": { 
+		"directory": "./public/", 
+		"binding": "ASSETS" 
 	}
 	/**
 	 * Smart Placement
@@ -33,11 +41,6 @@
 	 * Note: Use secrets to store sensitive data.
 	 * https://developers.cloudflare.com/workers/configuration/secrets/
 	 */
-	/**
-	 * Static Assets
-	 * https://developers.cloudflare.com/workers/static-assets/binding/
-	 */
-	// "assets": { "directory": "./public/", "binding": "ASSETS" }
 	/**
 	 * Service Bindings (communicate between multiple Workers)
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
