@@ -8,34 +8,34 @@ interface TrendingTagsProps {
   tags: string[];
 }
 
-const tagDescriptions: Record<string, { description: string; color: string }> = {
+const tagDescriptions: Record<string, { description: string; colorClass: string }> = {
   'Business Banking': {
     description: 'Everything you need to know about managing your business finances, opening accounts, and banking solutions.',
-    color: 'bg-white',
+    colorClass: 'bg-card border-border',
   },
   'Getting Started': {
     description: 'Step-by-step guides to help you get up and running with Lenco business banking quickly.',
-    color: 'bg-yellow-400',
+    colorClass: 'bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-700/50',
   },
   'Finance Tips': {
     description: 'Expert advice on managing cash flow, budgeting, and making smart financial decisions for your business.',
-    color: 'bg-pink-400',
+    colorClass: 'bg-pink-50 dark:bg-pink-900/30 border-pink-200 dark:border-pink-700/50',
   },
   'Guide': {
     description: 'Comprehensive tutorials and walkthroughs for mastering business finance management.',
-    color: 'bg-purple-400',
+    colorClass: 'bg-purple-50 dark:bg-purple-900/30 border-purple-200 dark:border-purple-700/50',
   },
   'Nigeria': {
     description: 'Insights specific to doing business and banking in Nigeria.',
-    color: 'bg-green-400',
+    colorClass: 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700/50',
   },
   'Cash Flow': {
     description: 'Learn how to optimize your cash flow and keep your business financially healthy.',
-    color: 'bg-blue-400',
+    colorClass: 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700/50',
   },
   'Small Business': {
     description: 'Resources and tips specifically designed for small business owners and entrepreneurs.',
-    color: 'bg-orange-400',
+    colorClass: 'bg-orange-50 dark:bg-orange-900/30 border-orange-200 dark:border-orange-700/50',
   },
 };
 
@@ -58,17 +58,20 @@ export function TrendingTags({ tags }: TrendingTagsProps) {
   const displayTags = tags.filter((tag) => tag !== 'All');
 
   return (
-    <div className="py-8 px-6 bg-muted/50">
+    <div className="py-12 px-6 bg-background">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Trending Tags
-          </h3>
-          <div className="flex gap-1">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h3 className="text-lg font-semibold text-foreground">
+              Explore Topics
+            </h3>
+            <p className="text-sm text-muted-foreground mt-1">Browse articles by category</p>
+          </div>
+          <div className="flex gap-2">
             <button
               onClick={prevSlide}
               disabled={currentIndex === 0}
-              className="p-1.5 rounded-full bg-muted text-foreground disabled:opacity-30 hover:bg-accent transition-colors"
+              className="p-2 rounded-full bg-background border border-border text-foreground disabled:opacity-30 hover:bg-accent shadow-sm transition-all"
               aria-label="Previous"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -76,7 +79,7 @@ export function TrendingTags({ tags }: TrendingTagsProps) {
             <button
               onClick={nextSlide}
               disabled={currentIndex >= maxIndex}
-              className="p-1.5 rounded-full bg-muted text-foreground disabled:opacity-30 hover:bg-accent transition-colors"
+              className="p-2 rounded-full bg-background border border-border text-foreground disabled:opacity-30 hover:bg-accent shadow-sm transition-all"
               aria-label="Next"
             >
               <ChevronRight className="w-4 h-4" />
@@ -92,30 +95,32 @@ export function TrendingTags({ tags }: TrendingTagsProps) {
             {displayTags.map((tag) => {
               const tagInfo = tagDescriptions[tag] || {
                 description: `Explore articles about ${tag.toLowerCase()}.`,
-                color: 'bg-gray-400',
+                colorClass: 'bg-muted border-border',
               };
               
               return (
                 <div
                   key={tag}
-                  className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/4 px-1"
+                  className="shrink-0 w-full sm:w-1/2 lg:w-1/4 px-1"
                 >
-                  <div className={`${tagInfo.color} text-black rounded-xl p-5 h-full min-h-[180px] flex flex-col justify-between`}>
-                    <div>
-                      <h4 className="font-bold text-lg mb-2">{tag}</h4>
-                      <p className="text-sm text-black/70 line-clamp-3">
-                        {tagInfo.description}
-                      </p>
+                  <Link
+                    to="/blog"
+                    search={{ tag }}
+                    className="group block"
+                  >
+                    <div className={`${tagInfo.colorClass} border rounded-2xl p-6 h-full min-h-[200px] flex flex-col justify-between shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}>
+                      <div>
+                        <h4 className="font-bold text-xl mb-3 text-foreground">{tag}</h4>
+                        <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+                          {tagInfo.description}
+                        </p>
+                      </div>
+                      <div className="inline-flex items-center gap-2 text-sm font-semibold mt-4 text-primary">
+                        View Posts
+                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                      </div>
                     </div>
-                    <Link
-                      to="/blog"
-                      search={{ tag }}
-                      className="inline-flex items-center gap-1 text-sm font-semibold mt-4 group"
-                    >
-                      View Posts
-                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </div>
+                  </Link>
                 </div>
               );
             })}

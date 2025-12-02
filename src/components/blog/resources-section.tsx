@@ -49,10 +49,10 @@ const iconMap = {
 
 export function ResourcesSection() {
   return (
-    <div className="py-16 px-6 bg-background">
+    <div className="py-16 px-6 bg-muted/50">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+        <div className="text-center mb-12">
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 tracking-tight">
             Learn and grow with our best resources
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -60,33 +60,42 @@ export function ResourcesSection() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {resources.map((resource) => {
             const Icon = iconMap[resource.icon];
             return (
               <Link
                 key={resource.title}
                 to={resource.href}
-                className="group relative block rounded-2xl overflow-hidden border border-border bg-card hover:bg-accent transition-colors"
+                className="group relative block rounded-2xl overflow-hidden bg-background border border-border shadow-sm hover:shadow-lg hover:border-border/80 hover:-translate-y-1 transition-all duration-300"
               >
                 {/* Content */}
-                <div className="relative p-6 h-full min-h-[200px] flex flex-col justify-between">
-                  {resource.badge && (
-                    <span className="inline-flex self-start px-2.5 py-1 text-xs font-semibold uppercase tracking-wider bg-primary text-primary-foreground rounded-full mb-4">
-                      {resource.badge}
-                    </span>
-                  )}
+                <div className="relative p-6 h-full min-h-[220px] flex flex-col">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    {resource.badge && (
+                      <span className="px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider bg-muted text-muted-foreground rounded-full">
+                        {resource.badge}
+                      </span>
+                    )}
+                  </div>
                   
                   <div className="mt-auto">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Icon className="w-5 h-5 text-primary" />
-                      <h3 className="font-bold text-card-foreground group-hover:text-primary transition-colors">
-                        {resource.title}
-                      </h3>
-                    </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">
+                    <h3 className="font-semibold text-card-foreground group-hover:text-primary transition-colors mb-2">
+                      {resource.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
                       {resource.description}
                     </p>
+                  </div>
+
+                  <div className="flex items-center gap-1 text-sm text-primary font-medium mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    Learn more
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
                 </div>
               </Link>

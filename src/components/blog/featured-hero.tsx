@@ -14,35 +14,41 @@ interface FeaturedHeroProps {
 
 export function FeaturedHero({ post }: FeaturedHeroProps) {
   return (
-    <div className="py-10 px-6 bg-background">
+    <div className="py-16 px-6 bg-background">
       <div className="max-w-7xl mx-auto">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-6">
-          Featured Posts
-        </h3>
+        <div className="flex items-center gap-3 mb-8">
+          <div className="h-px flex-1 bg-border" />
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground px-4">
+            Featured Post
+          </h3>
+          <div className="h-px flex-1 bg-border" />
+        </div>
         
         <Link to={post.url} className="group block">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
             {/* Image */}
-            <div className="relative aspect-16/10 rounded-2xl overflow-hidden">
+            <div className="relative aspect-16/10 rounded-2xl overflow-hidden shadow-lg ring-1 ring-border/50">
               {post.thumbnail ? (
                 <img
                   src={post.thumbnail}
                   alt={post.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               ) : (
                 <div className="w-full h-full bg-muted" />
               )}
+              {/* Overlay gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-5">
               {post.tags && post.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {post.tags.slice(0, 2).map((tag) => (
                     <span
                       key={tag}
-                      className="px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-primary text-primary-foreground rounded-full"
+                      className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider bg-primary/10 text-primary rounded-full border border-primary/20"
                     >
                       {tag}
                     </span>
@@ -50,25 +56,32 @@ export function FeaturedHero({ post }: FeaturedHeroProps) {
                 </div>
               )}
               
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground group-hover:text-primary transition-colors leading-[1.15] tracking-tight">
                 {post.title}
               </h2>
               
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>{post.date}</span>
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <span className="font-medium">{post.date}</span>
                 {post.author && (
                   <>
-                    <span>—</span>
-                    <span>{post.author}</span>
+                    <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+                    <span>By {post.author}</span>
                   </>
                 )}
               </div>
               
               {post.description && (
-                <p className="text-muted-foreground text-base md:text-lg leading-relaxed line-clamp-4">
+                <p className="text-muted-foreground text-base md:text-lg leading-relaxed line-clamp-3">
                   {post.description}
                 </p>
               )}
+
+              <div className="flex items-center gap-2 text-primary font-semibold mt-2">
+                Read article
+                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </div>
             </div>
           </div>
         </Link>

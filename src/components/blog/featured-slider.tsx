@@ -40,7 +40,7 @@ export function FeaturedSlider({ posts }: FeaturedSliderProps) {
   if (posts.length === 0) return null;
 
   return (
-    <div className="relative">
+    <div className="relative py-2">
       <div className="overflow-hidden">
         <div
           className="flex transition-transform duration-500 ease-in-out"
@@ -49,12 +49,12 @@ export function FeaturedSlider({ posts }: FeaturedSliderProps) {
           {posts.map((post) => (
             <div
               key={post.url}
-              className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/4 px-2"
+              className="shrink-0 w-full sm:w-1/2 lg:w-1/4 px-2"
             >
               <Link to={post.url} className="group block">
-                <div className="flex gap-3 items-start">
+                <div className="flex gap-4 items-start p-3 rounded-xl hover:bg-accent/50 transition-colors">
                   {post.thumbnail && (
-                    <div className="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+                    <div className="w-16 h-16 shrink-0 rounded-lg overflow-hidden shadow-sm ring-1 ring-border">
                       <img
                         src={post.thumbnail}
                         alt={post.title}
@@ -63,14 +63,14 @@ export function FeaturedSlider({ posts }: FeaturedSliderProps) {
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-medium text-foreground line-clamp-2 group-hover:text-primary transition-colors">
+                    <h3 className="text-sm font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors leading-snug">
                       {post.title}
                     </h3>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
                       <span>{post.date}</span>
                       {post.author && (
                         <>
-                          <span>—</span>
+                          <span className="opacity-50">•</span>
                           <span>{post.author}</span>
                         </>
                       )}
@@ -88,7 +88,7 @@ export function FeaturedSlider({ posts }: FeaturedSliderProps) {
           <button
             onClick={prevSlide}
             disabled={currentIndex === 0}
-            className="p-1 rounded bg-muted text-foreground disabled:opacity-30 hover:bg-accent transition-colors"
+            className="p-1.5 rounded-full bg-background border border-border text-foreground disabled:opacity-30 hover:bg-accent shadow-sm transition-all"
             aria-label="Previous"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -96,7 +96,7 @@ export function FeaturedSlider({ posts }: FeaturedSliderProps) {
           <button
             onClick={nextSlide}
             disabled={currentIndex >= maxIndex}
-            className="p-1 rounded bg-muted text-foreground disabled:opacity-30 hover:bg-accent transition-colors"
+            className="p-1.5 rounded-full bg-background border border-border text-foreground disabled:opacity-30 hover:bg-accent shadow-sm transition-all"
             aria-label="Next"
           >
             <ChevronRight className="w-4 h-4" />
