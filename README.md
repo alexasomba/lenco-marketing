@@ -1,290 +1,216 @@
-Welcome to your new TanStack app! 
+# Lenco Marketing Site
 
-# Getting Started
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Last Updated](https://img.shields.io/badge/last%20updated-2%20December%202025-green.svg)
+![License](https://img.shields.io/badge/license-Proprietary-red.svg)
+![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)
+![pnpm](https://img.shields.io/badge/pnpm-%3E%3D9-orange.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)
+![React](https://img.shields.io/badge/React-19-61DAFB.svg)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.x-38B2AC.svg)
+![Cloudflare Workers](https://img.shields.io/badge/Cloudflare%20Workers-deployed-F38020.svg)
 
-To run this application:
+The official marketing website and API documentation for [Lenco](https://lenco.co) - a business banking platform licensed by the Central Bank of Nigeria.
+
+Built with **TanStack Start**, **Fumadocs**, and deployed on **Cloudflare Workers**.
+
+## 🚀 Quick Start
 
 ```bash
+# Install dependencies
 pnpm install
-pnpm start
-```
 
-# Building For Production
+# Start development server
+pnpm dev
 
-To build this application for production:
-
-```bash
+# Build for production
 pnpm build
+
+# Deploy to Cloudflare Workers
+pnpm deploy
 ```
 
-## Testing
+## 🏗️ Tech Stack
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+| Technology | Purpose |
+|------------|---------|
+| [TanStack Start](https://tanstack.com/start) | Full-stack React framework with SSR |
+| [TanStack Router](https://tanstack.com/router) | File-based routing with type safety |
+| [Fumadocs](https://fumadocs.vercel.app/) | Documentation framework for MDX content |
+| [Tailwind CSS v4](https://tailwindcss.com/) | Utility-first CSS framework |
+| [shadcn/ui](https://ui.shadcn.com/) | Accessible UI components |
+| [Magic UI](https://magicui.design/) | Animated components |
+| [Cloudflare Workers](https://workers.cloudflare.com/) | Edge SSR deployment |
+
+## 📁 Project Structure
+
+```
+├── content/
+│   ├── docs/           # API documentation (MDX)
+│   │   ├── index.mdx   # Docs landing page
+│   │   ├── getting-started.mdx
+│   │   ├── accounts.mdx
+│   │   ├── transactions.mdx
+│   │   ├── transfers.mdx
+│   │   ├── virtual-accounts.mdx
+│   │   ├── webhooks.mdx
+│   │   └── ...
+│   └── blog/           # Blog posts (MDX)
+│       ├── getting-started-with-lenco.mdx
+│       └── ...
+├── public/             # Static assets
+│   └── images/
+├── src/
+│   ├── components/
+│   │   ├── ui/         # shadcn/ui components
+│   │   ├── magicui/    # Magic UI animated components
+│   │   ├── blog/       # Blog-specific components
+│   │   ├── LencoHeader.tsx
+│   │   └── LencoFooter.tsx
+│   ├── lib/
+│   │   ├── source.ts       # Fumadocs loader (docs)
+│   │   ├── blog-source.ts  # Fumadocs loader (blog)
+│   │   └── utils.ts        # Utility functions
+│   ├── routes/
+│   │   ├── __root.tsx      # Root layout
+│   │   ├── index.tsx       # Homepage
+│   │   ├── blog/
+│   │   │   ├── index.tsx   # Blog listing
+│   │   │   └── $.tsx       # Blog post pages (splat route)
+│   │   └── docs/
+│   │       └── $.tsx       # Docs pages (splat route)
+│   ├── router.tsx          # Router configuration
+│   ├── routeTree.gen.ts    # Auto-generated route tree
+│   └── styles.css          # Global styles
+├── source.config.ts    # Fumadocs MDX configuration
+├── vite.config.ts      # Vite configuration
+└── wrangler.jsonc      # Cloudflare Workers config
+```
+
+## 📝 Content Management
+
+### Adding Documentation Pages
+
+1. Create a new `.mdx` file in `content/docs/`:
+
+```mdx
+---
+title: Your Page Title
+description: Brief description for SEO
+---
+
+# Your Page Title
+
+Content goes here...
+```
+
+2. Add the page to the sidebar in `content/docs/meta.json`:
+
+```json
+{
+  "pages": ["index", "getting-started", "your-new-page"]
+}
+```
+
+### Adding Blog Posts
+
+Create a new `.mdx` file in `content/blog/`:
+
+```mdx
+---
+title: "Blog Post Title"
+description: "Brief description"
+date: "2024-12-01"
+tags: ["Finance", "Business"]
+featured: true
+readTime: "5 min read"
+author: "Author Name"
+thumbnail: "/images/blog/thumbnail.jpg"
+---
+
+Your blog content here...
+```
+
+## 🎨 UI Components
+
+### Adding shadcn/ui components
 
 ```bash
-pnpm test
+npx shadcn@latest add button
+npx shadcn@latest add card
 ```
 
-## Styling
+Components are installed to `src/components/ui/`.
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
-
-
-
-
-## Routing
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add another a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-
-import { Link } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
-```
-
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/people",
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json() as Promise<{
-      results: {
-        name: string;
-      }[];
-    }>;
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData();
-    return (
-      <ul>
-        {data.results.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    );
-  },
-});
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-### React-Query
-
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
-
-First add your dependencies:
+### Adding Magic UI components
 
 ```bash
-pnpm add @tanstack/react-query @tanstack/react-query-devtools
+npx shadcn@latest add "https://magicui.design/r/shimmer-button.json"
 ```
 
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
+Components are installed to `src/components/magicui/`.
 
-```tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+## 🌙 Theming
 
-// ...
+The site supports light and dark modes using CSS custom properties. Theme tokens are defined in `src/styles.css`:
 
-const queryClient = new QueryClient();
+- `bg-background` / `text-foreground` - Main background/text
+- `bg-muted` / `text-muted-foreground` - Secondary colors
+- `bg-primary` / `text-primary` - Brand colors
+- `bg-card` / `border-border` - Card and border colors
 
-// ...
+Use these tokens instead of hardcoded colors (e.g., `bg-white`, `text-gray-900`) to ensure proper theme support.
 
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
+## 🔧 Development
 
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
-}
+### Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start development server on port 3000 |
+| `pnpm build` | Build for production |
+| `pnpm deploy` | Build and deploy to Cloudflare Workers |
+| `pnpm cf-typegen` | Generate Cloudflare Worker types |
+| `pnpm test` | Run Vitest tests |
+
+### Path Aliases
+
+Use `@/` for imports from the `src` directory:
+
+```typescript
+import { Button } from '@/components/ui/button'
+import { source } from '@/lib/source'
+import { cn } from '@/lib/utils'
 ```
 
-You can also add TanStack Query Devtools to the root route (optional).
+## 🚢 Deployment
 
-```tsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
-```
-
-Now you can use `useQuery` to fetch your data.
-
-```tsx
-import { useQuery } from "@tanstack/react-query";
-
-import "./App.css";
-
-function App() {
-  const { data } = useQuery({
-    queryKey: ["people"],
-    queryFn: () =>
-      fetch("https://swapi.dev/api/people")
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  });
-
-  return (
-    <div>
-      <ul>
-        {data.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export default App;
-```
-
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
-
-## State Management
-
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
-
-First you need to add TanStack Store as a dependency:
+The site is deployed to Cloudflare Workers. Configuration is in `wrangler.jsonc`.
 
 ```bash
-pnpm add @tanstack/store
+# Deploy to production
+pnpm deploy
 ```
 
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
+## 📚 API Documentation
 
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store } from "@tanstack/store";
-import "./App.css";
+The `/docs` section contains the complete Lenco API reference, migrated from the legacy readme.io documentation. It includes:
 
-const countStore = new Store(0);
+- **Getting Started** - Authentication and API basics
+- **Accounts** - Manage bank accounts
+- **Recipients** - Manage transfer recipients
+- **Transactions** - View transaction history
+- **Transfers** - Create bank transfers
+- **Virtual Accounts** - Collection accounts
+- **Bill Payments** - Airtime, data, electricity, cable TV
+- **Webhooks** - Real-time event notifications
+- **Error Codes** - API error reference
 
-function App() {
-  const count = useStore(countStore);
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  );
-}
+## 📄 License
 
-export default App;
-```
+Proprietary - Lenco Technology Limited
 
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
+## 👤 Author
 
-Let's check this out by doubling the count using derived state.
+**Alex Asomba** - [@alexasomba](https://github.com/alexasomba)
 
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store, Derived } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
-});
-doubledStore.mount();
-
-function App() {
-  const count = useStore(countStore);
-  const doubledCount = useStore(doubledStore);
-
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  );
-}
-
-export default App;
-```
-
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
-
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
-
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).

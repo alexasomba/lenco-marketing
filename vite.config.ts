@@ -5,6 +5,8 @@ import viteReact from '@vitejs/plugin-react'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
 import { cloudflare } from '@cloudflare/vite-plugin'
+import mdx from 'fumadocs-mdx/vite';
+import * as MdxConfig from './source.config';
 
 const config = defineConfig({
   plugins: [
@@ -17,6 +19,7 @@ const config = defineConfig({
     tailwindcss(),
     tanstackStart(),
     viteReact(),
+    mdx(MdxConfig),
   ],
 })
 

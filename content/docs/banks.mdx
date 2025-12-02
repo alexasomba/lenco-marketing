@@ -1,0 +1,139 @@
+---
+title: Banks
+description: Get a list of supported banks and financial institutions
+---
+
+# Banks
+
+Retrieve a list of all supported banks and financial institutions in Nigeria.
+
+## List All Banks
+
+Get list of banks and financial institutions.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/banks`
+</Callout>
+
+### Response Schema
+
+```json
+{
+  "status": true,
+  "message": "string",
+  "data": [
+    {
+      "code": "string",
+      "name": "string"
+    }
+  ]
+}
+```
+
+### Example Request
+
+```bash
+curl --request GET \
+  --url https://api.lenco.co/access/v1/banks \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json'
+```
+
+### Example Response
+
+```json
+{
+  "status": true,
+  "message": "Banks retrieved",
+  "data": [
+    {
+      "code": "044",
+      "name": "Access Bank"
+    },
+    {
+      "code": "023",
+      "name": "Citibank Nigeria"
+    },
+    {
+      "code": "050",
+      "name": "Ecobank Nigeria"
+    },
+    {
+      "code": "070",
+      "name": "Fidelity Bank"
+    },
+    {
+      "code": "011",
+      "name": "First Bank of Nigeria"
+    },
+    {
+      "code": "214",
+      "name": "First City Monument Bank"
+    },
+    {
+      "code": "058",
+      "name": "Guaranty Trust Bank"
+    },
+    {
+      "code": "030",
+      "name": "Heritage Bank"
+    },
+    {
+      "code": "301",
+      "name": "Jaiz Bank"
+    },
+    {
+      "code": "082",
+      "name": "Keystone Bank"
+    },
+    {
+      "code": "101",
+      "name": "Providus Bank"
+    },
+    {
+      "code": "076",
+      "name": "Polaris Bank"
+    },
+    {
+      "code": "221",
+      "name": "Stanbic IBTC Bank"
+    },
+    {
+      "code": "068",
+      "name": "Standard Chartered Bank"
+    },
+    {
+      "code": "232",
+      "name": "Sterling Bank"
+    },
+    {
+      "code": "100",
+      "name": "Suntrust Bank"
+    },
+    {
+      "code": "032",
+      "name": "Union Bank of Nigeria"
+    },
+    {
+      "code": "033",
+      "name": "United Bank for Africa"
+    },
+    {
+      "code": "215",
+      "name": "Unity Bank"
+    },
+    {
+      "code": "035",
+      "name": "Wema Bank"
+    },
+    {
+      "code": "057",
+      "name": "Zenith Bank"
+    }
+  ]
+}
+```
+
+<Callout type="info">
+The bank `code` is used when creating recipients, resolving accounts, and initiating transfers.
+</Callout>

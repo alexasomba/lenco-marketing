@@ -1,0 +1,150 @@
+---
+title: Point of Sale
+description: Manage POS terminals and transactions
+---
+
+# Point of Sale
+
+Manage your assigned POS terminals and retrieve transaction information.
+
+## List Assigned POS Terminals
+
+Retrieve information about your assigned POS terminals.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/point-of-sale/terminals`
+</Callout>
+
+### Query Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `page` | integer | 1 | The page number to retrieve |
+| `serialNumber` | string | - | Filter by POS terminal serial number |
+
+### Response Schema
+
+```json
+{
+  "status": true,
+  "message": "string",
+  "data": {
+    "terminals": [
+      {
+        "id": "string",
+        "name": "string",
+        "address": "string" | null,
+        "phone": "string" | null,
+        "serialNumber": "string",
+        "model": "string" | null,
+        "assignedAt": "date-time",
+        "settlementAccountId": "string" | null,
+        "accountDetails": {
+          "accountName": "string",
+          "accountNumber": "string",
+          "bankName": "string"
+        } | null,
+        "status": "assigned" | "unassigned",
+        "unassignedAt": "date-time" | null
+      }
+    ],
+    "meta": {
+      "total": 0,
+      "pageCount": 0,
+      "perPage": 50,
+      "currentPage": 1
+    }
+  }
+}
+```
+
+### Example Request
+
+```bash
+curl --request GET \
+  --url 'https://api.lenco.co/access/v1/point-of-sale/terminals?page=1' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json'
+```
+
+---
+
+## Get Terminal by ID
+
+Retrieve a specific POS terminal by its ID.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/point-of-sale/terminals/{id}`
+</Callout>
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | The terminal ID |
+
+---
+
+## Assign POS Terminal
+
+Assign a POS terminal to your account.
+
+<Callout>
+**POST** `https://api.lenco.co/access/v1/point-of-sale/terminals/assign`
+</Callout>
+
+---
+
+## Unassign POS Terminal
+
+Unassign a POS terminal from your account.
+
+<Callout>
+**POST** `https://api.lenco.co/access/v1/point-of-sale/terminals/unassign`
+</Callout>
+
+---
+
+## POS Transactions
+
+### List All POS Transactions
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/point-of-sale/transactions`
+</Callout>
+
+### Get Transaction by ID
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/point-of-sale/transactions/{id}`
+</Callout>
+
+### Get Transaction by Reference
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/point-of-sale/transactions/by-reference/{reference}`
+</Callout>
+
+---
+
+## Repush Webhook
+
+Manually trigger a webhook notification for a POS transaction.
+
+<Callout>
+**POST** `https://api.lenco.co/access/v1/point-of-sale/transactions/webhook/repush`
+</Callout>
+
+---
+
+## Webhook Notifications
+
+You'll receive webhook notifications for POS events:
+
+| Event | Description |
+|-------|-------------|
+| `pos-transaction` | A POS transaction has taken place |
+| `pos-transaction.settled` | Your account was credited for a POS transaction |
+| `pos-terminal.updated` | An assigned POS terminal has been updated |
+
+See [Webhooks](/docs/webhooks) for more details.

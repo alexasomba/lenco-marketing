@@ -1,0 +1,145 @@
+---
+title: Accounts
+description: Retrieve information about your bank accounts
+---
+
+# Accounts
+
+Manage and retrieve information about your Lenco bank accounts.
+
+## List All Accounts
+
+Retrieve information about all your bank accounts.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/accounts`
+</Callout>
+
+### Response Schema
+
+```json
+{
+  "status": true,
+  "message": "string",
+  "data": [
+    {
+      "id": "string",
+      "name": "string",
+      "bankAccount": {
+        "accountName": "string",
+        "accountNumber": "string",
+        "bank": {
+          "code": "string",
+          "name": "string"
+        }
+      },
+      "type": "string",
+      "status": "active" | "deleted",
+      "availableBalance": "string",
+      "currentBalance": "string",
+      "createdAt": "date-time",
+      "currency": "string"
+    }
+  ]
+}
+```
+
+### Example Request
+
+```bash
+curl --request GET \
+  --url https://api.lenco.co/access/v1/accounts \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json'
+```
+
+---
+
+## Get Account by ID
+
+Retrieve information about a specific bank account.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/account/{id}`
+</Callout>
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | Your 36-character account UUID |
+
+### Response Schema
+
+```json
+{
+  "status": true,
+  "message": "string",
+  "data": {
+    "id": "string",
+    "name": "string",
+    "bankAccount": {
+      "accountName": "string",
+      "accountNumber": "string",
+      "bank": {
+        "code": "string",
+        "name": "string"
+      }
+    },
+    "type": "string",
+    "status": "active" | "deleted",
+    "availableBalance": "string",
+    "currentBalance": "string",
+    "currency": "string",
+    "createdAt": "date-time"
+  }
+}
+```
+
+### Example Request
+
+```bash
+curl --request GET \
+  --url https://api.lenco.co/access/v1/account/YOUR_ACCOUNT_ID \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json'
+```
+
+---
+
+## Get Account Balance
+
+Retrieve the account balance of a specific bank account.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/account/{id}/balance`
+</Callout>
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | Your 36-character account UUID |
+
+### Response Schema
+
+```json
+{
+  "status": true,
+  "message": "string",
+  "data": {
+    "availableBalance": "string",
+    "currentBalance": "string",
+    "currency": "string"
+  }
+}
+```
+
+### Example Request
+
+```bash
+curl --request GET \
+  --url https://api.lenco.co/access/v1/account/YOUR_ACCOUNT_ID/balance \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json'
+```

@@ -1,5 +1,6 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["guide/**"],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
@@ -27,6 +28,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
+      "fumadocs-mdx:collections/*": [".source/*"]
     }
   }
 }

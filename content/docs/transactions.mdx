@@ -1,0 +1,147 @@
+---
+title: Transactions
+description: View and manage your transaction history
+---
+
+# Transactions
+
+Retrieve and manage transactions that occurred on your bank accounts.
+
+## List All Transactions
+
+Get transactions that occurred on your bank accounts.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/transactions`
+</Callout>
+
+### Query Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `page` | integer | 1 | The page number to retrieve |
+| `status` | string | - | Filter by status: `pending`, `successful`, `failed`, `declined` |
+| `type` | string | - | Filter by type: `credit`, `debit` |
+| `start` | date | - | Earliest date to filter (Format: YYYY-MM-DD) |
+| `end` | date | - | Latest date to filter (Format: YYYY-MM-DD) |
+| `search` | string | - | Search term to look for |
+| `accountIds` | array | - | Your 36-character account UUIDs to filter |
+
+### Response Schema
+
+```json
+{
+  "status": true,
+  "message": "string",
+  "data": {
+    "transactions": [
+      {
+        "id": "string",
+        "amount": "string",
+        "fee": "string",
+        "narration": "string",
+        "type": "credit" | "debit",
+        "initiatedAt": "date-time" | null,
+        "completedAt": "date-time" | null,
+        "accountId": "string",
+        "details": {
+          "accountName": "string",
+          "accountNumber": "string",
+          "bank": {
+            "code": "string",
+            "name": "string"
+          }
+        } | null,
+        "status": "pending" | "successful" | "failed" | "declined",
+        "failedAt": "date-time" | null,
+        "reasonForFailure": "string" | null,
+        "clientReference": "string" | null,
+        "transactionReference": "string",
+        "nipSessionId": "string" | null
+      }
+    ],
+    "meta": {
+      "total": 0,
+      "pageCount": 0,
+      "perPage": 50,
+      "currentPage": 1
+    }
+  }
+}
+```
+
+### Example Request
+
+```bash
+curl --request GET \
+  --url 'https://api.lenco.co/access/v1/transactions?page=1&status=successful&type=debit' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json'
+```
+
+---
+
+## Get Transaction by ID
+
+Retrieve a specific transaction by its ID.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/transaction/{id}`
+</Callout>
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | The transaction ID |
+
+### Example Request
+
+```bash
+curl --request GET \
+  --url https://api.lenco.co/access/v1/transaction/TRANSACTION_ID \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json'
+```
+
+---
+
+## Get Transaction by Reference
+
+Retrieve a specific transaction by your client reference.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/transaction-by-reference/{reference}`
+</Callout>
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `reference` | string | Yes | Your unique client reference |
+
+### Example Request
+
+```bash
+curl --request GET \
+  --url https://api.lenco.co/access/v1/transaction-by-reference/YOUR_REFERENCE \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json'
+```
+
+---
+
+## Transaction Status
+
+Transactions can have the following statuses:
+
+| Status | Description |
+|--------|-------------|
+| `pending` | Transaction is being processed |
+| `successful` | Transaction completed successfully |
+| `failed` | Transaction failed |
+| `declined` | Transaction was declined |
+
+<Callout type="info">
+**Best Practice**: Use webhooks to get real-time notifications when transaction statuses change. See [Webhooks](/docs/webhooks) for more details.
+</Callout>

@@ -1,0 +1,82 @@
+---
+title: Resolve Account
+description: Verify and resolve bank account details
+---
+
+# Resolve Account
+
+Use this endpoint to verify bank account details before making transfers. This helps ensure you're sending money to the correct recipient.
+
+## Resolve Account Details
+
+Verify/resolve account details to get the account name.
+
+<Callout>
+**GET** `https://api.lenco.co/access/v1/resolve`
+</Callout>
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `accountNumber` | string | Yes | 10-digit NUBAN account number |
+| `bankCode` | string | Yes | The bank code (see [Banks](/docs/banks)) |
+
+### Response Schema
+
+```json
+{
+  "status": true,
+  "message": "string",
+  "data": {
+    "accountName": "string",
+    "accountNumber": "string",
+    "bank": {
+      "code": "string",
+      "name": "string"
+    }
+  }
+}
+```
+
+### Example Request
+
+```bash
+curl --request GET \
+  --url 'https://api.lenco.co/access/v1/resolve?accountNumber=0123456789&bankCode=058' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'accept: application/json'
+```
+
+### Example Response
+
+```json
+{
+  "status": true,
+  "message": "Account resolved",
+  "data": {
+    "accountName": "JOHN DOE",
+    "accountNumber": "0123456789",
+    "bank": {
+      "code": "058",
+      "name": "Guaranty Trust Bank"
+    }
+  }
+}
+```
+
+### Error Response
+
+If the account cannot be resolved, you'll receive a `400` status code:
+
+```json
+{
+  "status": false,
+  "message": "Could not resolve account",
+  "errorCode": "01"
+}
+```
+
+<Callout type="info">
+**Best Practice**: Always resolve an account before creating a recipient or initiating a transfer to ensure the account details are correct.
+</Callout>
