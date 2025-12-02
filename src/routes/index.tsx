@@ -24,7 +24,6 @@ import {
   Wifi,
   Smartphone,
   ArrowRight,
-  ChevronRight,
   ChevronsRight,
   Building2,
   Users,
