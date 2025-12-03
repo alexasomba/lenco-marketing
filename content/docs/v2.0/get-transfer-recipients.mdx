@@ -1,0 +1,23 @@
+---
+title: "/transfer-recipients"
+description: "List and manage transfer recipients (v2)"
+readmeUrl: "https://lenco-api.readme.io/v2.0/reference/get-transfer-recipients"
+version: "v2.0"
+---
+
+# /transfer-recipients
+
+GET https://api.lenco.co/access/v2/transfer-recipients
+
+Retrieve information about transfer recipients. Supports pagination and filters.
+
+### Response schema
+
+```json
+{
+  "status": boolean,
+  "message": string,
+  "data": [ { "id": string, "currency": string, "type": string, "country": string, "details": {} } ],
+  "meta": { "total": number, "perPage": number, "currentPage": number, "pageCount": number }
+}
+```

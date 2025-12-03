@@ -1,0 +1,26 @@
+---
+title: "/banks — list banks"
+description: "Retrieve a list of banks and financial institutions (v2)."
+readmeUrl: "https://lenco-api.readme.io/v2.0/reference/get-banks"
+version: "v2.0"
+---
+
+# /banks
+
+GET https://api.lenco.co/access/v2/banks
+
+Retrieve a list of banks and financial institutions.
+
+### Query params
+
+- country — optional (e.g., `ng`, `zm`)
+
+### Response schema
+
+```json
+{
+  "status": boolean,
+  "message": string,
+  "data": [ { "id": string, "name": string, "country": string } ]
+}
+```

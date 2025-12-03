@@ -1,0 +1,77 @@
+---
+title: "Accept Payments"
+description: "Integrate Lenco popup widget to accept payments on web — steps and sample code."
+readmeUrl: "https://lenco-api.readme.io/v2.0/reference/accept-payments"
+version: "v2.0"
+---
+
+# Accept Payments
+
+Lenco provides a simple and convenient payment flow for web with the popup
+widget. It can be integrated in a few easy steps.
+
+### Step 1: Collect customer information
+
+You must collect details like email, amount, reference, and optional customer
+fields (firstName, lastName, phone) and billing address.
+
+Important parameters include:
+
+| key | Required | Description |
+|-----|----------|-------------|
+| key | Yes | Your public key from Lenco |
+| email | Yes | Customer email |
+| reference | Yes | Unique reference — only -, ., _, and alphanumeric allowed |
+| amount | Yes | Amount to charge (can include decimals) |
+| currency | No | ISO 3-letter currency code |
+| channels | No | Array of channels (e.g., [card, mobile-money]) |
+
+### Step 2: Initiate the payment
+
+Include the Lenco inline script and call LencoPay.getPaid with your options.
+
+```html
+<script src="https://pay.lenco.co/js/v1/inline.js"></script>
+<script>
+function getPaidWithLenco() {
+  LencoPay.getPaid({
+    key: 'YOUR_PUBLIC_KEY',
+    reference: 'ref-' + Date.now(),
+    email: 'customer@email.com',
+    amount: 1000,
+    currency: "ZMW",
+    channels: ["card", "mobile-money"],
+    onSuccess: function (response) {
+      const reference = response.reference;
+      alert('Payment complete! Reference: ' + reference);
+    },
+    onClose: function () { alert('Payment was not completed, window closed.'); },
+    onConfirmationPending: function () { alert('Pending.'); },
+  });
+}
+</script>
+```
+
+Sandbox usage: use https://pay.sandbox.lenco.co/js/v1/inline.js
+
+### Step 3: Handle onSuccess
+
+Verify the payment server-side then acknowledge and complete application flow.
+
+### Step 4: Verify the payment
+
+Call the verify endpoint from your server (example):
+
+```bash
+curl https://api.lenco.co/access/v2/collections/status/ref-1 \
+  -H "Authorization: Bearer API_SECRET_KEY" \
+  -X GET
+```
+
+### Step 5: Handle webhooks
+
+Lenco triggers webhook events such as `collection.successful` when payments
+complete — configure your webhook URL and verify event signatures.
+
+> Note: Never call the Lenco API directly from the frontend — always perform
+> sensitive calls server-side to avoid exposing your secret key.

@@ -1,0 +1,33 @@
+---
+title: "/resolve/bank-account"
+description: "Resolve and verify bank account details (v2)"
+readmeUrl: "https://lenco-api.readme.io/v2.0/reference/resolve-bank-account"
+version: "v2.0"
+---
+
+# /resolve/bank-account
+
+POST https://api.lenco.co/access/v2/resolve/bank-account
+
+Use this endpoint to verify and resolve bank account details. Required body parameters include `accountNumber` and `bankId`.
+
+### Request body
+
+- accountNumber (string) - required
+- bankId (string) - required
+- country (string) - optional, i.e. `ng`, `zm`
+
+### Response schema
+
+```json
+{
+  "status": boolean,
+  "message": string,
+  "data": {
+    "type": "bank-account",
+    "accountName": string,
+    "accountNumber": string,
+    "bank": { "id": string, "name": string, "country": string }
+  }
+}
+```

@@ -1,0 +1,38 @@
+---
+title: "/accounts — list accounts"
+description: "Retrieve information about accounts for the authenticated token (v2)."
+readmeUrl: "https://lenco-api.readme.io/v2.0/reference/get-accounts"
+version: "v2.0"
+---
+
+# /accounts
+
+GET https://api.lenco.co/access/v2/accounts
+
+Retrieve information about your bank accounts. Results are paginated and the response will generally follow the API's standard response format.
+
+## Response schema
+
+```json
+{
+  "status": boolean,
+  "message": string,
+  "data": [
+    {
+      "id": string,
+      "details": { "type": string, "accountName": string, "tillNumber": string },
+      "type": string,
+      "status": string,
+      "createdAt": "date-time",
+      "currency": string,
+      "availableBalance": string | null,
+      "ledgerBalance": string | null
+    }
+  ],
+  "meta": { "total": number, "pageCount": number, "perPage": number, "currentPage": number }
+}
+```
+
+## Query params
+
+- page (int) — defaults to 1

@@ -1,0 +1,12 @@
+---
+title: "Encryption"
+description: "How Lenco uses JWE + RSA + AES to encrypt sensitive payloads (v2)"
+readmeUrl: "https://lenco-api.readme.io/v2.0/reference/encryption"
+version: "v2.0"
+---
+
+# Encryption
+
+Lenco uses RSA and AES for secure payload encryption. Obtain an RSA public key from the `GET /encryption-key` endpoint and use JWE to wrap your payload.
+
+Follow canonical examples on the original ReadMe for concrete implementations using Go, Node and other languages.

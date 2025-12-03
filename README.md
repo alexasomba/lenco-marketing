@@ -205,6 +205,10 @@ The `/docs` section contains the complete Lenco API reference, migrated from the
 - **Bill Payments** - Airtime, data, electricity, cable TV
 - **Webhooks** - Real-time event notifications
 - **Error Codes** - API error reference
+Note: Visiting `/docs` on this site now shows a local landing page that lets users select which version they want to view (v2 or v1). We are in the process of migrating the canonical ReadMe content into the repo under `content/docs/v2.0` and `content/docs/v1.0`.
+
+- v2 docs (canonical ReadMe): https://lenco-api.readme.io/v2.0/reference/introduction
+- v1 docs (legacy ReadMe): https://lenco-api.readme.io/reference/introduction
 
 ## 📄 License
 

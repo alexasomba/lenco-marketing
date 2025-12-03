@@ -1,0 +1,19 @@
+---
+title: "Webhooks"
+description: "Setup and verify webhook event handling"
+readmeUrl: "https://lenco-api.readme.io/v2.0/reference/webhooks"
+version: "v2.0"
+---
+
+# Webhooks
+
+Learn how to receive events from Lenco in your application: create a public POST endpoint, verify signatures (X-Lenco-Signature), and respond with 200 OK to acknowledge events. Common events include `transaction.successful`, `bill-payment.successful`, and `pos-transaction`.
+
+Example signature verification (Node/Express):
+
+```js
+const crypto = require('crypto')
+const webhookHashKey = crypto.createHash('sha256').update(process.env.SECRET_KEY).digest('hex')
+const hash = crypto.createHmac('sha512', webhookHashKey).update(JSON.stringify(req.body)).digest('hex')
+if (hash === req.headers['x-lenco-signature']) { /* valid */ }
+```

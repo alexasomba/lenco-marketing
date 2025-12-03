@@ -1,0 +1,57 @@
+---
+title: "Getting Started"
+description: "Authentication, requests, and basic usage for Lenco API v2"
+readmeUrl: "https://lenco-api.readme.io/v2.0/reference/get-started"
+version: "v2.0"
+---
+
+# Getting started
+
+This page will help you get started with Lenco API v2.
+
+## Securing your API token
+
+Someone who steals your Lenco API token can interact with your accounts on your
+behalf, so treat it as securely as you would treat any password. Tokens should
+never be stored in source control. If you accidentally publicize a token via
+version control or other methods, you should immediately reach out to
+support@lenco.co to generate a new API token.
+
+## Using the token
+
+Authenticate your API calls by including your api token in the Authorization
+header of every request you make. Authorization headers should be in the
+following format:
+
+```
+Authorization: Bearer API_TOKEN
+```
+
+Requests made without authentication will fail with a 401 Unauthorized.
+
+## Requests and responses
+
+Both request body data and response data are formatted as JSON. Responses are
+commonly shaped like this:
+
+```json
+{
+  "status": true,
+  "message": "Recipients retrieved",
+  "data": { }
+}
+```
+
+The `meta` key is used for pagination and context when returning lists.
+
+## Errors
+
+The API uses conventional HTTP status codes. Common cases:
+
+- 200 — success
+- 400 — validation/client error
+- 401 — unauthorized
+- 404 — not found
+- 5xx — server error
+
+The `message`, `errorCode`, and `errors` fields provide additional details.
