@@ -4,9 +4,9 @@ import { runWithStartContext } from '@tanstack/start-storage-context'
 
 beforeEach(() => {
   vi.restoreAllMocks()
-  delete process.env.GITHUB_TOKEN
-  delete process.env.GITHUB_ISSUE_OWNER
-  delete process.env.GITHUB_ISSUE_REPO
+  delete (process.env as any).GITHUB_TOKEN
+  delete (process.env as any).GITHUB_ISSUE_OWNER
+  delete (process.env as any).GITHUB_ISSUE_REPO
 })
 
 afterEach(() => {

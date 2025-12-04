@@ -15,6 +15,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as LlmsDotmdxSplatRouteImport } from './routes/llms[.]mdx.$'
 import { Route as DocsSplatRouteImport } from './routes/docs/$'
 import { Route as DocsDotmdxSplatRouteImport } from './routes/docs[.]mdx.$'
+import { Route as BlogRssDotxmlRouteImport } from './routes/blog/rss[.]xml'
 import { Route as BlogAllRouteImport } from './routes/blog/all'
 import { Route as BlogSplatRouteImport } from './routes/blog/$'
 import { Route as ApiSearchRouteImport } from './routes/api/search'
@@ -54,6 +55,11 @@ const DocsSplatRoute = DocsSplatRouteImport.update({
 const DocsDotmdxSplatRoute = DocsDotmdxSplatRouteImport.update({
   id: '/docs.mdx/$',
   path: '/docs.mdx/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRssDotxmlRoute = BlogRssDotxmlRouteImport.update({
+  id: '/blog/rss.xml',
+  path: '/blog/rss.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogAllRoute = BlogAllRouteImport.update({
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/api/search': typeof ApiSearchRoute
   '/blog/$': typeof BlogSplatRoute
   '/blog/all': typeof BlogAllRoute
+  '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/docs.mdx/$': typeof DocsDotmdxSplatRoute
   '/docs/$': typeof DocsSplatRoute
   '/llms.mdx/$': typeof LlmsDotmdxSplatRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/api/search': typeof ApiSearchRoute
   '/blog/$': typeof BlogSplatRoute
   '/blog/all': typeof BlogAllRoute
+  '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/docs.mdx/$': typeof DocsDotmdxSplatRoute
   '/docs/$': typeof DocsSplatRoute
   '/llms.mdx/$': typeof LlmsDotmdxSplatRoute
@@ -150,6 +158,7 @@ export interface FileRoutesById {
   '/api/search': typeof ApiSearchRoute
   '/blog/$': typeof BlogSplatRoute
   '/blog/all': typeof BlogAllRoute
+  '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/docs.mdx/$': typeof DocsDotmdxSplatRoute
   '/docs/$': typeof DocsSplatRoute
   '/llms.mdx/$': typeof LlmsDotmdxSplatRoute
@@ -170,6 +179,7 @@ export interface FileRouteTypes {
     | '/api/search'
     | '/blog/$'
     | '/blog/all'
+    | '/blog/rss.xml'
     | '/docs.mdx/$'
     | '/docs/$'
     | '/llms.mdx/$'
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/api/search'
     | '/blog/$'
     | '/blog/all'
+    | '/blog/rss.xml'
     | '/docs.mdx/$'
     | '/docs/$'
     | '/llms.mdx/$'
@@ -206,6 +217,7 @@ export interface FileRouteTypes {
     | '/api/search'
     | '/blog/$'
     | '/blog/all'
+    | '/blog/rss.xml'
     | '/docs.mdx/$'
     | '/docs/$'
     | '/llms.mdx/$'
@@ -225,6 +237,7 @@ export interface RootRouteChildren {
   ApiSearchRoute: typeof ApiSearchRoute
   BlogSplatRoute: typeof BlogSplatRoute
   BlogAllRoute: typeof BlogAllRoute
+  BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
   DocsDotmdxSplatRoute: typeof DocsDotmdxSplatRoute
   DocsSplatRoute: typeof DocsSplatRoute
   LlmsDotmdxSplatRoute: typeof LlmsDotmdxSplatRoute
@@ -280,6 +293,13 @@ declare module '@tanstack/react-router' {
       path: '/docs.mdx/$'
       fullPath: '/docs.mdx/$'
       preLoaderRoute: typeof DocsDotmdxSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/rss.xml': {
+      id: '/blog/rss.xml'
+      path: '/blog/rss.xml'
+      fullPath: '/blog/rss.xml'
+      preLoaderRoute: typeof BlogRssDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/all': {
@@ -361,6 +381,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSearchRoute: ApiSearchRoute,
   BlogSplatRoute: BlogSplatRoute,
   BlogAllRoute: BlogAllRoute,
+  BlogRssDotxmlRoute: BlogRssDotxmlRoute,
   DocsDotmdxSplatRoute: DocsDotmdxSplatRoute,
   DocsSplatRoute: DocsSplatRoute,
   LlmsDotmdxSplatRoute: LlmsDotmdxSplatRoute,

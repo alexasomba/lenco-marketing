@@ -7,9 +7,10 @@
     "module": "ESNext",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "types": [
-        "./worker-configuration.d.ts",
-        "node",
-        "vite/client"
+      "./worker-configuration.d.ts",
+      "node",
+      "vite/client",
+      "vitest"
     ],
 
     /* Bundler mode */

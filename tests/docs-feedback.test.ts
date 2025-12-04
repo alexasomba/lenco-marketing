@@ -3,13 +3,13 @@ import { handleCreateFeedback } from '../src/lib/feedback'
 
 afterEach(() => {
   vi.restoreAllMocks()
-  delete process.env.GITHUB_TOKEN
-  delete process.env.GITHUB_ISSUE_OWNER
-  delete process.env.GITHUB_ISSUE_REPO
+  delete (process.env as any).GITHUB_TOKEN
+  delete (process.env as any).GITHUB_ISSUE_OWNER
+  delete (process.env as any).GITHUB_ISSUE_REPO
 })
 
 test('fallback creates prefilled GitHub new issue URL when no token', async () => {
-  delete process.env.GITHUB_TOKEN
+  delete (process.env as any).GITHUB_TOKEN
   process.env.GITHUB_ISSUE_OWNER = 'userX'
   process.env.GITHUB_ISSUE_REPO = 'myrepo'
 
