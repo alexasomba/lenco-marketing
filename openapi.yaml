@@ -1,4 +1,1297 @@
+openapi: 3.1.0
+info:
+  title: Lenco API
+  version: "1.0.0"
+  description: |
+    Lenco API v1 - OpenAPI specification covering Accounts, Banks, Resolve, Transactions,
+    Virtual Accounts, Bill Payments and Point of Sale operations. This spec is intended
+    to align with the endpoints documented at the Lenco API developer docs.
+servers:
+  - url: https://api.lenco.com/v1
+    description: Lenco API v1 (production)
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Detailed error message
+    ApiResponse:
+      type: object
+      properties:
+        status:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        number:
+          type: string
+        bank_code:
+          type: string
+        currency:
+          type: string
+          example: NGN
+        created_at:
+          type: string
+          format: date-time
+    AccountDetail:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        bankAccount:
+          type: object
+          properties:
+            accountName:
+              type: string
+            accountNumber:
+              type: string
+            bank:
+              type: object
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+        type:
+          type: string
+        status:
+          type: string
+          enum: [active, deleted]
+        availableBalance:
+          type: string
+        currentBalance:
+          type: string
+        currency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    Balance:
+      type: object
+      properties:
+        account_id:
+          type: string
+        available:
+          type: number
+          format: double
+        ledger:
+          type: number
+          format: double
+        currency:
+          type: string
+    Bank:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        country:
+          type: string
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+        currency:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+        reference:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    TransferRequest:
+      type: object
+      properties:
+        source_account_id:
+          type: string
+        destination_account_number:
+          type: string
+        destination_bank_code:
+          type: string
+        amount:
+          type: number
+        currency:
+          type: string
+        reference:
+          type: string
+        narration:
+          type: string
+    BulkTransferRequest:
+      type: object
+      properties:
+        transfers:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransferRequest'
+    VirtualAccount:
+      type: object
+      properties:
+        account_reference:
+          type: string
+        account_number:
+          type: string
+        bank_code:
+          type: string
+        currency:
+          type: string
+        status:
+          type: string
+    BillVendor:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+    BillProduct:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        vendor_id:
+          type: string
+    BillPaymentRequest:
+      type: object
+      properties:
+        product_id:
+          type: string
+        amount:
+          type: number
+        account_ref:
+          type: string
+        reference:
+          type: string
+    POSDevice:
+      type: object
+      properties:
+        id:
+          type: string
+        serial_number:
+          type: string
+        assigned_to:
+          type: string
+    POSPayment:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+        currency:
+          type: string
+        reference:
+          type: string
+        status:
+          type: string
+    AccountsListResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                accounts:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/AccountDetail'
+                meta:
+                  type: object
+                  properties:
+                    total:
+                      type: integer
+                    pageCount:
+                      type: integer
+                    perPage:
+                      type: integer
+                    currentPage:
+                      type: integer
+    AccountResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/AccountDetail'
+    BalanceResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                availableBalance:
+                  type: string
+                currentBalance:
+                  type: string
+                currency:
+                  type: string
+    TransactionsListResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                transactions:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Transaction'
+                meta:
+                  type: object
+                  properties:
+                    total:
+                      type: integer
+                    pageCount:
+                      type: integer
+                    perPage:
+                      type: integer
+                    currentPage:
+                      type: integer
+    TransactionResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Transaction'
+    TransferCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                request:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum: [queued, created]
+                transaction:
+                  $ref: '#/components/schemas/Transaction'
+    BulkTransferResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                id:
+                  type: string
+                reference:
+                  type: string
+                stats:
+                  type: object
+                  properties:
+                    total:
+                      type: integer
+                    successful:
+                      type: integer
+                    failed:
+                      type: integer
+                    pending:
+                      type: integer
+                transactions:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Transaction'
+    VirtualAccountsListResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                virtualAccounts:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/VirtualAccount'
+                meta:
+                  type: object
+                  properties:
+                    total:
+                      type: integer
+                    pageCount:
+                      type: integer
+                    perPage:
+                      type: integer
+                    currentPage:
+                      type: integer
+    VirtualAccountResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/VirtualAccount'
+    BillsVendorsResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                vendors:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/BillVendor'
+    BillsProductsResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                products:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/BillProduct'
+    BillPaymentResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                id:
+                  type: string
+                amount:
+                  type: string
+                status:
+                  type: string
+                transactionReference:
+                  type: string
+    POSDevicesResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                terminals:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/POSDevice'
+    POSTransactionsResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                transactions:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/POSPayment'
+      
+security:
+  - BearerAuth: []
 tags:
-  - name: test
-    description: this is a tag.
-    x-displayName: My Test Name
+  - name: Accounts
+    description: Account listing, retrieval and balances
+  - name: Banks
+    description: Bank directory and lookup
+  - name: Resolve
+    description: Account resolution endpoints
+  - name: Transactions
+    description: Wallet payments, transfers and transaction lookup
+  - name: Virtual Accounts
+    description: Create and manage virtual accounts and look up transactions
+  - name: Bill Payment
+    description: Bill vendors, products and bill payment operations
+  - name: Point of Sale
+    description: POS terminal management and POS transactions
+paths:
+  /accounts:
+    get:
+      tags: [Accounts]
+      summary: Get list of accounts
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 25
+      responses:
+        '200':
+          description: A list of accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountsListResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /accounts/{accountId}:
+    parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Accounts]
+      summary: Get account by ID
+      responses:
+        '200':
+          description: Account details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /accounts/{accountId}/balance:
+    parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Accounts]
+      summary: Get account balance
+      responses:
+        '200':
+          description: Balance for account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalanceResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /banks:
+    get:
+      tags: [Banks]
+      summary: Get list of banks
+      parameters:
+        - name: country
+          in: query
+          schema:
+            type: string
+          description: Optional country code to filter banks
+      responses:
+        '200':
+          description: List of banks
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Bank'
+
+  /resolve/account:
+    post:
+      tags: [Resolve]
+      summary: Resolve bank account details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account_number:
+                  type: string
+                bank_code:
+                  type: string
+      responses:
+        '200':
+          description: Resolved account information
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          accountName:
+                            type: string
+                          accountNumber:
+                            type: string
+                          bank:
+                            type: object
+                            properties:
+                              code:
+                                type: string
+                              name:
+                                type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /transactions:
+    get:
+      tags: [Transactions]
+      summary: List transactions
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A paginated list of transactions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsListResponse'
+    post:
+      tags: [Transactions]
+      summary: Create a transaction (e.g., receive / charge)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                currency:
+                  type: string
+                type:
+                  type: string
+                source_account_id:
+                  type: string
+                destination_account_id:
+                  type: string
+                reference:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Transaction created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+  /transactions/{transactionId}:
+    parameters:
+      - name: transactionId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Transactions]
+      summary: Get transaction by ID
+      responses:
+        '200':
+          description: Transaction information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+  /transactions/reference/{reference}:
+    parameters:
+      - name: reference
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Transactions]
+      summary: Get transaction by reference
+      responses:
+        '200':
+          description: Transaction lookup by reference
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+  /transfers:
+    post:
+      tags: [Transactions]
+      summary: Create single transfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+      responses:
+        '201':
+          description: Transfer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferCreateResponse'
+
+  /transfers/reference/{reference}:
+    parameters:
+      - name: reference
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Transactions]
+      summary: Get transfer by reference
+      responses:
+        '200':
+          description: Transfer details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+  /transfers/bulk:
+    post:
+      tags: [Transactions]
+      summary: Create bulk transfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkTransferRequest'
+      responses:
+        '201':
+          description: Bulk transfers queued/created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkTransferResponse'
+
+  /transfers/bulk/{batchReference}:
+    parameters:
+      - name: batchReference
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Transactions]
+      summary: Get bulk transfer details by batch reference
+      responses:
+        '200':
+          description: Bulk transfer batch status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkTransferResponse'
+
+  /virtual-accounts:
+    post:
+      tags: [Virtual Accounts]
+      summary: Create virtual account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account_reference:
+                  type: string
+                currency:
+                  type: string
+                customer_name:
+                  type: string
+      responses:
+        '201':
+          description: Virtual account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualAccountResponse'
+
+  /virtual-accounts/static:
+    get:
+      tags: [Virtual Accounts]
+      summary: Get list of static virtual accounts
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualAccountsListResponse'
+
+  /virtual-accounts/by-reference/{accountReference}:
+    parameters:
+      - name: accountReference
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Virtual Accounts]
+      summary: Get virtual account by account reference
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualAccountResponse'
+
+  /virtual-accounts/static/bvn/{bvn}:
+    get:
+      tags: [Virtual Accounts]
+      summary: Get static virtual account by BVN
+      parameters:
+        - name: bvn
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualAccountResponse'
+
+  /virtual-accounts/{accountReference}/transactions:
+    parameters:
+      - name: accountReference
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Virtual Accounts]
+      summary: Get transactions for a virtual account
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsListResponse'
+
+  /virtual-accounts/transactions/{transactionId}:
+    parameters:
+      - name: transactionId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Virtual Accounts]
+      summary: Get a virtual account transaction by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+  /virtual-accounts/rejected:
+    get:
+      tags: [Virtual Accounts]
+      summary: Get rejected virtual account transactions
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsListResponse'
+
+  /virtual-accounts/rejected/{transactionId}:
+    parameters:
+      - name: transactionId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Virtual Accounts]
+      summary: Get rejected virtual account transaction by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+  /bills/vendors:
+    get:
+      tags: [Bill Payment]
+      summary: Get bill vendors
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillsVendorsResponse'
+
+  /bills/vendors/category/{category}:
+    parameters:
+      - name: category
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Bill Payment]
+      summary: Get bill vendors by category
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillsVendorsResponse'
+
+  /bills/vendors/{vendorId}:
+    parameters:
+      - name: vendorId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Bill Payment]
+      summary: Get bill vendor by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/BillVendor'
+
+  /bills/products:
+    get:
+      tags: [Bill Payment]
+      summary: Get bill products
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillsProductsResponse'
+
+  /bills/products/category/{category}:
+    parameters:
+      - name: category
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Bill Payment]
+      summary: Get bill products by category
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillsProductsResponse'
+
+  /bills/products/vendor/{vendorId}:
+    parameters:
+      - name: vendorId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Bill Payment]
+      summary: Get bill products by vendor
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillsProductsResponse'
+
+  /bills/products/{productId}:
+    get:
+      tags: [Bill Payment]
+      summary: Get bill product by ID
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/BillProduct'
+
+  /bills/lookup:
+    post:
+      tags: [Bill Payment]
+      summary: Lookup bill account (e.g., prefill beneficiary for a product)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: string
+                account:
+                  type: string
+      responses:
+        '200':
+          description: Account lookup details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          customerId:
+                            type: string
+                          customerName:
+                            type: string
+
+  /bills/payments:
+    post:
+      tags: [Bill Payment]
+      summary: Create a bill payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillPaymentRequest'
+      responses:
+        '201':
+          description: Bill payment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillPaymentResponse'
+    get:
+      tags: [Bill Payment]
+      summary: List bill payments
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          billPayments:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+
+  /bills/payments/{paymentId}:
+    parameters:
+      - name: paymentId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Bill Payment]
+      summary: Get bill payment by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillPaymentResponse'
+
+  /bills/payments/by-reference/{reference}:
+    parameters:
+      - name: reference
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Bill Payment]
+      summary: Get bill payment by reference
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillPaymentResponse'
+
+
+
+  /pos/terminals:
+    get:
+      tags: [Point of Sale]
+      summary: Get assigned POS terminals
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/POSDevicesResponse'
+    post:
+      tags: [Point of Sale]
+      summary: Assign a POS terminal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                serial_number:
+                  type: string
+                assigned_to:
+                  type: string
+      responses:
+        '201':
+          description: Device assignment created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/POSDevice'
+
+  /pos/terminals/{terminalId}:
+    parameters:
+      - name: terminalId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Point of Sale]
+      summary: Get POS terminal by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/POSDevice'
+    post:
+      tags: [Point of Sale]
+      summary: Unassign a POS terminal
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Unassignment succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /pos/transactions:
+    get:
+      tags: [Point of Sale]
+      summary: Get POS transactions
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/POSTransactionsResponse'
+
+  /pos/transactions/{transactionId}:
+    parameters:
+      - name: transactionId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Point of Sale]
+      summary: Get POS transaction by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/POSPayment'
+
+  /pos/transactions/reference/{reference}:
+    parameters:
+      - name: reference
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Point of Sale]
+      summary: Get POS transaction by reference
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/POSPayment'
+
+  /pos/transactions/{transactionId}/repush-webhook:
+    post:
+      tags: [Point of Sale]
+      summary: Re-push a POS transaction webhook
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Webhook repush queued
