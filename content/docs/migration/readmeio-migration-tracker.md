@@ -98,6 +98,15 @@ Top-level sections found on the v2 introduction page:
  - /docs/v2.0/get-pos-transaction-by-id — added
  - /docs/v2.0/assign-pos-terminal — added
  - /docs/v2.0/repush-pos-transaction-webhook — added
+ - /docs/v2.0/get-transfer-by-id — added
+ - /docs/v2.0/get-transfer-by-reference — added
+ - /docs/v2.0/get-transfer-recipient-by-id — added
+ - /docs/v2.0/resolve-mobile-money — added
+ - /docs/v2.0/resolve-lenco-money — added
+ - /docs/v2.0/resolve-lenco-merchant — added
+ - /docs/v2.0/get-pos-transaction-by-id — added
+ - /docs/v2.0/assign-pos-terminal — added
+ - /docs/v2.0/repush-pos-transaction-webhook — added
 Done — these pages are part of the repo now (see content/docs/v2.0/). Continue migrating remaining v2 subpages and POST endpoints.
 
 Notes:
