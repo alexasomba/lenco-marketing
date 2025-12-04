@@ -104,6 +104,7 @@ Top-level sections found on the v2 introduction page:
  - /docs/v2.0/resolve-mobile-money — added
  - /docs/v2.0/resolve-lenco-money — added
  - /docs/v2.0/resolve-lenco-merchant — added
+ - /docs/v2.0/get-transactions — added
  - /docs/v2.0/get-pos-transaction-by-id — added
  - /docs/v2.0/assign-pos-terminal — added
  - /docs/v2.0/repush-pos-transaction-webhook — added
@@ -133,6 +134,21 @@ Top-level sections found on the v1 introduction page:
 
 ### v1: subpages (discovered so far)
 
+### v1: placeholder pages created in repository
+
+The following top-level v1 pages were created as placeholders under `content/docs/v1.0/` so v1 can be migrated serially:
+
+- /docs/v1.0/get-started — added
+- /docs/v1.0/get-accounts — added
+- /docs/v1.0/get-recipients — added
+- /docs/v1.0/get-banks — added
+- /docs/v1.0/resolve-account — added
+- /docs/v1.0/get-transactions — added
+- /docs/v1.0/create-virtual-accounts — added
+- /docs/v1.0/bill-payments — added
+- /docs/v1.0/get-assigned-pos-terminals — added
+- /docs/v1.0/webhooks — added
+- /docs/v1.0/pricing — added
 - Accounts
 	- /reference/get-accounts
 	- /reference/get-account-by-id

@@ -202,7 +202,7 @@ function AllArticlesPage() {
                   {paginatedPosts.map((post) => (
                     <Link key={post.url} to={post.url} className="group block">
                       <article className="h-full flex flex-col">
-                        <div className="relative aspect-[16/10] rounded-xl overflow-hidden mb-4">
+                        <div className="relative aspect-16/10 rounded-xl overflow-hidden mb-4">
                           <img
                             src={getLocalThumbnail(post.thumbnail)}
                             alt={post.title}

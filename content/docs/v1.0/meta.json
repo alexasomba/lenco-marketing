@@ -1,9 +1,20 @@
 {
     "root": true,
-    "title": "API v1.0",
-    "description": "Legacy API (deprecated)",
-    "icon": "History",
+    "title": "API v1 (legacy)",
+    "description": "Lenco API legacy v1 reference",
+    "icon": "Clock",
     "pages": [
-        "..."
+        "index",
+        "get-started",
+        "get-accounts",
+        "get-recipients",
+        "get-banks",
+        "resolve-account",
+        "get-transactions",
+        "create-virtual-accounts",
+        "bill-payments",
+        "get-assigned-pos-terminals",
+        "webhooks",
+        "pricing"
     ]
 }
