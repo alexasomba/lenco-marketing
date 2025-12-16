@@ -1,0 +1,13 @@
+{
+  "title": "API Reference",
+  "pages": [
+    "accounts",
+    "banks",
+    "recipients",
+    "resolve",
+    "transactions",
+    "virtual-accounts",
+    "bill-payment",
+    "point-of-sale"
+  ]
+}
