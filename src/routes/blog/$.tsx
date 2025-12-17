@@ -1,25 +1,29 @@
-import { createFileRoute, notFound, Link } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
-import { blogSource } from '@/lib/blog-source';
-import blogBrowserCollections from 'fumadocs-mdx:collections/browser';
-import defaultMdxComponents from 'fumadocs-ui/mdx';
-import { FlickeringGrid } from '@/components/magicui/flickering-grid';
-import { TableOfContents } from '@/components/blog/table-of-contents';
-import { AuthorCard, AuthorsInline, AuthorsStack } from '@/components/blog/author-card';
-import { getAuthors } from '@/lib/authors';
-import { PromoContent } from '@/components/blog/promo-content';
-import { MobileTableOfContents } from '@/components/blog/mobile-toc';
-import { ReadMoreSection } from '@/components/blog/read-more-section';
-import { ArrowLeft, Calendar, Clock, Mail, Copy } from 'lucide-react';
-import { siFacebook, siX, siWhatsapp } from 'simple-icons';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { getLocalThumbnail } from '@/lib/utils';
+import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { blogSource } from "@/lib/blog-source";
+import blogBrowserCollections from "fumadocs-mdx:collections/browser";
+import defaultMdxComponents from "fumadocs-ui/mdx";
+import { FlickeringGrid } from "@/components/magicui/flickering-grid";
+import { TableOfContents } from "@/components/blog/table-of-contents";
+import {
+  AuthorCard,
+  AuthorsInline,
+  AuthorsStack,
+} from "@/components/blog/author-card";
+import { getAuthors } from "@/lib/authors";
+import { PromoContent } from "@/components/blog/promo-content";
+import { MobileTableOfContents } from "@/components/blog/mobile-toc";
+import { ReadMoreSection } from "@/components/blog/read-more-section";
+import { ArrowLeft, Calendar, Clock, Mail, Copy } from "lucide-react";
+import { siFacebook, siX, siWhatsapp } from "simple-icons";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { getLocalThumbnail } from "@/lib/utils";
 
-export const Route = createFileRoute('/blog/$')({
+export const Route = createFileRoute("/blog/$")({
   component: BlogPostPage,
   loader: async ({ params }) => {
-    const slugs = params._splat?.split('/') ?? [];
+    const slugs = params._splat?.split("/") ?? [];
     const data = await serverLoader({ data: slugs });
     await clientLoader.preload(data.path);
     return data;
@@ -36,11 +40,14 @@ interface BlogPageData {
   // numeric read time in minutes
   readTimeMinutes?: number;
   // author can be a string or an array of author objects
-  author?: string | { name: string; avatar?: string; position?: string } | Array<{ name: string; avatar?: string; position?: string }>
+  author?:
+    | string
+    | { name: string; avatar?: string; position?: string }
+    | Array<{ name: string; avatar?: string; position?: string }>;
 }
 
 const serverLoader = createServerFn({
-  method: 'GET',
+  method: "GET",
 })
   .inputValidator((slugs: string[]) => slugs)
   .handler(async ({ data: slugs }) => {
@@ -62,7 +69,7 @@ const serverLoader = createServerFn({
 
       return {
         path: page.path,
-        slug: slugs.join('/'),
+        slug: slugs.join("/"),
         title: page.data.title,
         description: page.data.description,
         date: page.data.date,
@@ -78,11 +85,11 @@ const serverLoader = createServerFn({
       };
     } catch (error) {
       // Re-throw notFound errors as-is
-      if (error && typeof error === 'object' && 'notFound' in error) {
+      if (error && typeof error === "object" && "notFound" in error) {
         throw error;
       }
       // Log unexpected errors and throw a generic error
-      console.error('Error loading blog page:', error);
+      console.error("Error loading blog page:", error);
       throw notFound();
     }
   });
@@ -103,10 +110,10 @@ const clientLoader = blogBrowserCollections.blog.createClientLoader({
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 }
 
@@ -117,7 +124,7 @@ function BlogPostPage() {
   return (
     <div className="min-h-screen bg-background relative">
       {/* Flickering Grid Background */}
-      <div className="absolute top-0 left-0 z-0 w-full h-[300px] mask-[linear-gradient(to_top,transparent_25%,black_95%)]">
+      <div className="absolute top-0 left-0 z-0 w-full h-75 mask-[linear-gradient(to_top,transparent_25%,black_95%)]">
         <FlickeringGrid
           className="absolute top-0 left-0 size-full"
           squareSize={4}
@@ -134,7 +141,7 @@ function BlogPostPage() {
           {/* Back button & Tags */}
           <div className="flex flex-wrap items-center gap-3 gap-y-5 text-sm text-muted-foreground">
             <Button variant="outline" asChild className="h-6 w-6 p-0">
-              <Link to="/blog" search={{ tag: 'All' }}>
+              <Link to="/blog" search={{ tag: "All" }}>
                 <ArrowLeft className="w-4 h-4" />
                 <span className="sr-only">Back to all articles</span>
               </Link>
@@ -219,18 +226,17 @@ function BlogPostPage() {
         </main>
 
         {/* Sidebar - Desktop Only */}
-        <aside className="hidden lg:block w-[350px] shrink-0 p-6 lg:p-10 bg-muted/60 dark:bg-muted/20">
+        <aside className="hidden lg:block w-87.5 shrink-0 p-6 lg:p-10 bg-muted/60 dark:bg-muted/20">
           <div className="sticky top-20 space-y-8">
-              {/* Author block: single or multiple */}
-              {data.author && (
-                Array.isArray(data.author) ? (
-                  <AuthorsStack authors={data.author as any} />
-                ) : typeof data.author === 'string' ? (
-                  <AuthorCard name={data.author} position="Author" />
-                ) : (
-                  <AuthorsStack authors={[data.author as any]} />
-                )
-              )}
+            {/* Author block: single or multiple */}
+            {data.author &&
+              (Array.isArray(data.author) ? (
+                <AuthorsStack authors={data.author as any} />
+              ) : typeof data.author === "string" ? (
+                <AuthorCard name={data.author} position="Author" />
+              ) : (
+                <AuthorsStack authors={[data.author as any]} />
+              ))}
 
             {/* Table of Contents */}
             <div className="border border-border rounded-lg p-6 bg-card">
@@ -257,11 +263,11 @@ function BlogPostPage() {
 }
 
 function ShareButtons({ title }: { title: string }) {
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') setUrl(window.location.href);
+    if (typeof window !== "undefined") setUrl(window.location.href);
   }, []);
 
   const onCopy = async () => {
@@ -274,12 +280,12 @@ function ShareButtons({ title }: { title: string }) {
   const shareTwitter = () => {
     const text = encodeURIComponent(`${title}`);
     const shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`;
-    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+    window.open(shareUrl, "_blank", "noopener,noreferrer");
   };
 
   const shareFacebook = () => {
     const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+    window.open(shareUrl, "_blank", "noopener,noreferrer");
   };
 
   const shareEmail = () => {
@@ -293,30 +299,78 @@ function ShareButtons({ title }: { title: string }) {
     const text = encodeURIComponent(`${title} ${url}`);
     // Works both on mobile (opens app) and desktop (opens WhatsApp Web)
     const shareUrl = `https://wa.me/?text=${text}`;
-    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+    window.open(shareUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
     <div className="flex items-center gap-2">
-      <Button size="icon" variant="outline" onClick={onCopy} aria-label="Copy link" title={copied ? 'Copied!' : 'Copy link'}>
+      <Button
+        size="icon"
+        variant="outline"
+        onClick={onCopy}
+        aria-label="Copy link"
+        title={copied ? "Copied!" : "Copy link"}
+      >
         <Copy className="w-4 h-4" />
       </Button>
-      <Button size="icon" variant="outline" onClick={shareTwitter} aria-label="Share on Twitter" title="Share on Twitter">
-        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <Button
+        size="icon"
+        variant="outline"
+        onClick={shareTwitter}
+        aria-label="Share on Twitter"
+        title="Share on Twitter"
+      >
+        <svg
+          className="w-4 h-4"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden
+        >
           <path d={siX.path} />
         </svg>
       </Button>
-      <Button size="icon" variant="outline" onClick={shareFacebook} aria-label="Share on Facebook" title="Share on Facebook">
-        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <Button
+        size="icon"
+        variant="outline"
+        onClick={shareFacebook}
+        aria-label="Share on Facebook"
+        title="Share on Facebook"
+      >
+        <svg
+          className="w-4 h-4"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden
+        >
           <path d={siFacebook.path} />
         </svg>
       </Button>
-      <Button size="icon" variant="outline" onClick={shareWhatsApp} aria-label="Share on WhatsApp" title="Share on WhatsApp">
-        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <Button
+        size="icon"
+        variant="outline"
+        onClick={shareWhatsApp}
+        aria-label="Share on WhatsApp"
+        title="Share on WhatsApp"
+      >
+        <svg
+          className="w-4 h-4"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden
+        >
           <path d={siWhatsapp.path} />
         </svg>
       </Button>
-      <Button size="icon" variant="outline" onClick={shareEmail} aria-label="Share by Email" title="Share by Email">
+      <Button
+        size="icon"
+        variant="outline"
+        onClick={shareEmail}
+        aria-label="Share by Email"
+        title="Share by Email"
+      >
         <Mail className="w-4 h-4" />
       </Button>
     </div>

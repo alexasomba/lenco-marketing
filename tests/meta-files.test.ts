@@ -3,6 +3,9 @@ import fs from 'fs'
 import path from 'path'
 
 test('top-level content/docs/meta.json entries match filesystem structure and each submeta.json entries map to .mdx files', () => {
+  const isSeparator = (value: unknown) =>
+    typeof value === 'string' && /^---.*---$/.test(value)
+
   const repoRoot = path.resolve(__dirname, '..')
   // 1) Verify top-level meta.json pages entries actually exist in the filesystem
   const topMetaPath = path.join(repoRoot, 'content', 'docs', 'meta.json')
@@ -28,6 +31,7 @@ test('top-level content/docs/meta.json entries match filesystem structure and ea
       const meta = JSON.parse(fs.readFileSync(subMetaPath, 'utf8'))
       const pages = meta.pages || []
       for (const page of pages) {
+        if (isSeparator(page)) continue
         const filePath = path.join(dirPath, `${page}.mdx`)
         expect(fs.existsSync(filePath)).toBe(true)
       }

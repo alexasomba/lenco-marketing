@@ -1,116 +1,41 @@
-# Lenco Marketing Site - AI Coding Instructions
+# Lenco Marketing Site — Copilot Instructions
 
-## Architecture Overview
+## Big Picture
 
-This is a **TanStack Start + Fumadocs** marketing site deployed to **Cloudflare Workers**. It combines:
-- **TanStack Router** for file-based routing (`src/routes/`)
-- **Fumadocs** for MDX content (docs at `/docs/*`, blog at `/blog/*`)
-- **Cloudflare Workers** for edge SSR via Vite plugin
+- TanStack Start app deployed to Cloudflare Workers (SSR via `@cloudflare/vite-plugin`).
+- Routing is TanStack Router file-based routes in `src/routes/`; the tree is generated in `src/routeTree.gen.ts`.
+- Docs + Blog are Fumadocs MDX collections:
+  - Docs content: `content/docs/` → served under `/docs/*`
+  - Blog content: `content/blog/` → served under `/blog/*`
+  - Generated collection modules live in `.source/` (generated at dev/build; don’t hand-edit).
 
-### Key Data Flow
-1. Routes in `src/routes/` define pages; TanStack auto-generates `src/routeTree.gen.ts`
-2. MDX content in `content/docs/` and `content/blog/` → processed by `fumadocs-mdx` → served via source loaders
-3. Splat routes (`src/routes/docs/$.tsx`, `src/routes/blog/$.tsx`) use server/client loader pattern for SSR
+## Key Flows / Patterns
 
-## Developer Workflows
+- Docs pages: `src/routes/docs/$.tsx` uses server + client loader.
+  - Server should return serializable data only; page tree is sent via `source.serializePageTree(...)`.
+  - Client rehydrates with `deserializePageTree(...)` then renders `DocsLayout`.
+- Raw MDX endpoint for copy/LLM: `src/routes/docs.mdx.$.ts` serves markdown; `src/start.ts` rewrites `/docs/*.mdx` → `/docs.mdx/*`.
+- Blog pages: `src/routes/blog/$.tsx` follows the same server/client loader idea.
+
+## Dev Workflows
 
 ```bash
-pnpm dev          # Start dev server on port 3000
-pnpm build        # Production build
-pnpm deploy       # Build + deploy to Cloudflare Workers
-pnpm cf-typegen   # Generate Cloudflare Worker types
-pnpm test         # Run Vitest tests
+pnpm dev                  # http://localhost:3000
+pnpm build                # production build (client + SSR)
+pnpm test                 # vitest
+pnpm exec tsc --noEmit    # typecheck
+pnpm deploy               # build + wrangler deploy
+pnpm cf-typegen           # regenerate Worker types
 ```
 
-## Project Conventions
+## Conventions
 
-### File Structure
-- **Routes**: `src/routes/` - TanStack file-based routing
-- **UI Components**: `src/components/ui/` - shadcn/ui components (new-york style)
-- **Magic UI**: `src/components/magicui/` - Animation components from magicui.design
-- **Docs Content**: `content/docs/` - MDX files for `/docs` routes
-- **Blog Content**: `content/blog/` - MDX files for `/blog` routes
-- **Source Loaders**: `src/lib/source.ts` (docs), `src/lib/blog-source.ts` (blog)
+- Use `@/` alias for `src/*` imports (see `tsconfig.json`).
+- UI: shadcn/ui in `src/components/ui/` (new-york style) + Magic UI in `src/components/magicui/`.
+- Styling: Tailwind v4; prefer theme tokens from `src/styles.css` (avoid hard-coded colors).
+- Docs navigation is driven by `content/docs/**/meta.json`; entries like `---Section---` are separators (not files).
 
-### Path Aliases
-Use `@/` for src imports (configured in `tsconfig.json`):
-```typescript
-import { Button } from '@/components/ui/button'
-import { source } from '@/lib/source'
-import { blogSource } from '@/lib/blog-source'
-```
+## “Gotchas” (repo-specific)
 
-### Component Patterns
-
-**Adding shadcn/ui components**:
-```bash
-npx shadcn@latest add <component-name>
-```
-Components install to `src/components/ui/`. Uses `cn()` from `@/lib/utils` for class merging.
-
-**Adding Magic UI components**:
-```bash
-npx shadcn@latest add "https://magicui.design/r/<component-name>.json"
-```
-
-### Route Patterns
-
-**Standard page route** (`src/routes/index.tsx`):
-```typescript
-import { createFileRoute } from '@tanstack/react-router'
-export const Route = createFileRoute('/')({ component: PageComponent })
-```
-
-**Server function pattern** (see `src/routes/docs/$.tsx`, `src/routes/blog/$.tsx`):
-```typescript
-import { createServerFn } from '@tanstack/react-start'
-const serverLoader = createServerFn({ method: 'GET' })
-  .inputValidator((data) => data)
-  .handler(async ({ data }) => { /* server-side logic */ })
-```
-
-### MDX Content (Fumadocs)
-
-**Documentation** (`content/docs/`):
-- Auto-generates routes under `/docs/*`
-- Source loader: `src/lib/source.ts`
-
-**Blog** (`content/blog/`):
-- Auto-generates routes under `/blog/*`
-- Source loader: `src/lib/blog-source.ts`
-- Frontmatter schema in `source.config.ts` includes: `date`, `tags`, `featured`, `readTime`, `author`, `thumbnail`
-
-**Adding a blog post**:
-```mdx
----
-title: "Post Title"
-description: "Brief description"
-date: "2024-12-01"
-tags: ["Tag1", "Tag2"]
-featured: true
-readTime: "5 min read"
-author: "Author Name"
-thumbnail: "/images/post-thumbnail.jpg"
----
-
-Your MDX content here...
-```
-
-### Styling
-- **Tailwind CSS v4** via `@tailwindcss/vite` plugin
-- Styles entry: `src/styles.css`
-- Use Tailwind classes directly; avoid custom CSS unless necessary
-- Icons from `lucide-react`
-
-## Cloudflare Workers Deployment
-
-- Config in `wrangler.jsonc`
-- Uses `@cloudflare/vite-plugin` for SSR environment
-- Worker types in `worker-configuration.d.ts`
-- Access Cloudflare bindings via `wrangler types` after adding to config
-
-## Testing
-
-- **Vitest** with React Testing Library
-- JSDOM environment for component tests
-- Run `pnpm test` for test execution
+- Cloudflare dev runner may bind an internal port (commonly `42069`); if `pnpm dev` fails with `EADDRINUSE :::42069`, kill the stale node process.
+- Router-level not-found handling is configured in `src/router.tsx` via `defaultNotFoundComponent`.
