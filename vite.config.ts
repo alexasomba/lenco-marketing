@@ -27,6 +27,10 @@ const config = defineConfig({
     include: [
       'lucide-react',
       'motion/react',
+      '@base-ui/react/select',
+      '@base-ui/react/separator',
+      '@hugeicons/react',
+      '@hugeicons/core-free-icons',
       // Fumadocs + MDX runtime entrypoints used in docs/blog.
       'fumadocs-core/source',
       'fumadocs-mdx/runtime/server',
@@ -52,12 +56,16 @@ const config = defineConfig({
     ssr: {
       optimizeDeps: {
         // The Cloudflare dev runner can't tolerate SSR pre-bundle changes after
-        // startup (it throws on "new version of the pre-bundle"). Disable
-        // runtime discovery and keep the include list above in sync.
-        noDiscovery: true,
+        // startup (it throws on "new version of the pre-bundle"). We still
+        // allow discovery during initial crawl so deps are pre-bundled before
+        // the first request.
         include: [
           'lucide-react',
           'motion/react',
+          '@base-ui/react/select',
+          '@base-ui/react/separator',
+          '@hugeicons/react',
+          '@hugeicons/core-free-icons',
           'fumadocs-core/source',
           'fumadocs-mdx/runtime/server',
           'fumadocs-ui/layouts/docs',

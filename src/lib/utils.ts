@@ -6,14 +6,20 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Resolve a thumbnail value to a local image path.
- * If the provided thumbnail is already a local path under /images/ it is returned as-is.
- * Otherwise we fall back to the app placeholder image so external URLs are avoided in the UI.
+ * Resolve a blog thumbnail value to a safe, local URL.
+ * - If missing, returns a placeholder under `public/images/blog/`.
+ * - If it's already a local path (`/images/...`), return as-is.
+ * - If it's an external URL, fall back to the placeholder (we don't proxy remote images).
  */
-export function getLocalThumbnail(thumbnail?: string) {
-  if (!thumbnail) return '/images/placeholder.svg';
-  const trimmed = thumbnail.trim();
-  if (trimmed.startsWith('/images/') || trimmed.startsWith('images/')) return trimmed;
-  // Any other value (including http/https) falls back to the placeholder.
-  return '/images/placeholder.svg';
+export function getLocalThumbnail(thumbnail?: string): string {
+  const placeholder = "/images/blog/placeholder.png"
+
+  if (!thumbnail) return placeholder
+  if (thumbnail.startsWith("/")) return thumbnail
+
+  // External URLs (http/https) are not guaranteed to exist locally.
+  if (/^https?:\/\//i.test(thumbnail)) return placeholder
+
+  // Treat any other relative-looking value as a local path.
+  return `/${thumbnail.replace(/^\.\/?/, "")}`
 }

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 
 interface PromoContentProps {
   variant?: "desktop" | "mobile";
@@ -47,9 +47,12 @@ export function PromoContent({ variant = "desktop", className }: PromoContentPro
             Get a free business current account with unlimited sub-accounts, instant payments, and powerful tools.
           </p>
         </div>
-        <Button asChild className="w-full">
-          <a href="https://app.lenco.co/signup">Get Started Free</a>
-        </Button>
+        <a
+          href="https://app.lenco.co/signup"
+          className={cn(buttonVariants({ variant: "default" }), "w-full")}
+        >
+          Get Started Free
+        </a>
       </div>
     </div>
   );

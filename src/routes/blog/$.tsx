@@ -17,8 +17,8 @@ import { ReadMoreSection } from "@/components/blog/read-more-section";
 import { ArrowLeft, Calendar, Clock, Mail, Copy } from "lucide-react";
 import { siFacebook, siX, siWhatsapp } from "simple-icons";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { getLocalThumbnail } from "@/lib/utils";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn, getLocalThumbnail } from "@/lib/utils";
 
 export const Route = createFileRoute("/blog/$")({
   component: BlogPostPage,
@@ -140,12 +140,17 @@ function BlogPostPage() {
         <div className="max-w-7xl mx-auto flex flex-col gap-6 p-6">
           {/* Back button & Tags */}
           <div className="flex flex-wrap items-center gap-3 gap-y-5 text-sm text-muted-foreground">
-            <Button variant="outline" asChild className="h-6 w-6 p-0">
-              <Link to="/blog" search={{ tag: "All" }}>
-                <ArrowLeft className="w-4 h-4" />
-                <span className="sr-only">Back to all articles</span>
-              </Link>
-            </Button>
+            <Link
+              to="/blog"
+              search={{ tag: "All" }}
+              className={cn(
+                buttonVariants({ variant: "outline", size: "xs" }),
+                "h-6 w-6 p-0"
+              )}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="sr-only">Back to all articles</span>
+            </Link>
             {data.tags && data.tags.length > 0 && (
               <div className="flex flex-wrap gap-3 text-muted-foreground">
                 {data.tags.map((tag) => (
