@@ -1,36 +1,50 @@
-import { createFileRoute, notFound } from '@tanstack/react-router';
-import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import { createServerFn } from '@tanstack/react-start';
-import { source } from '@/lib/source';
-import { getGithubIssueOwner, getGithubIssueRepo } from '@/lib/site-config';
-import { Feedback } from '@/components/feedback';
-import type { ActionResponse } from '@/components/feedback';
-import { onRateAction } from '@/server/actions/docs-feedback.server';
-import type * as PageTree from 'fumadocs-core/page-tree';
-import { useMemo } from 'react';
-import browserCollections from 'fumadocs-mdx:collections/browser';
+import { createFileRoute, notFound } from "@tanstack/react-router";
+import { DocsLayout } from "fumadocs-ui/layouts/docs";
+import { createServerFn } from "@tanstack/react-start";
+import { source } from "@/lib/source";
+import { getGithubIssueOwner, getGithubIssueRepo } from "@/lib/site-config";
+import { Feedback } from "@/components/feedback";
+import type { ActionResponse } from "@/components/feedback";
+import { onRateAction } from "@/server/actions/docs-feedback.server";
+import type * as PageTree from "fumadocs-core/page-tree";
+import { deserializePageTree } from "fumadocs-core/source/client";
+import { useMemo } from "react";
+import browserCollections from "fumadocs-mdx:collections/browser";
 import {
   DocsBody,
   DocsDescription,
   DocsPage,
   DocsTitle,
-} from 'fumadocs-ui/layouts/docs/page';
-import { LLMCopyButton, ViewOptions } from '@/components/page-actions';
-import defaultMdxComponents from 'fumadocs-ui/mdx';
-import { baseOptions, sidebarTabIcons } from '@/lib/layout.shared';
+} from "fumadocs-ui/layouts/docs/page";
+import { LLMCopyButton, ViewOptions } from "@/components/page-actions";
+import defaultMdxComponents from "fumadocs-ui/mdx";
+import { baseOptions, sidebarTabIcons } from "@/lib/layout.shared";
 
-export const Route = createFileRoute('/docs/$')({
+export const Route = createFileRoute("/docs/$")({
   component: Page,
   loader: async ({ params }) => {
-    const slugs = params._splat?.split('/') ?? [];
-    const data = await serverLoader({ data: slugs });
+    // Fumadocs resolves the root index page with an empty slug array (same as
+    // our /docs.mdx route). Using ['index'] will incorrectly 404 even when
+    // content/docs/index.mdx exists.
+    const slugs = params._splat ? params._splat.split("/") : [];
+    const data = (await serverLoader({ data: slugs })) as DocsRouteData;
     await clientLoader.preload(data.path);
     return data;
   },
 });
 
+type DocsRouteData = {
+  tree: object;
+  path: string;
+  title: string;
+  description?: string;
+  url: string;
+  owner: string;
+  repo: string;
+};
+
 const serverLoader = createServerFn({
-  method: 'GET',
+  method: "GET",
 })
   .inputValidator((slugs: string[]) => slugs)
   .handler(async ({ data: slugs }) => {
@@ -38,8 +52,15 @@ const serverLoader = createServerFn({
       const page = source.getPage(slugs);
       if (!page) throw notFound();
 
-      return {
-        tree: source.pageTree as object,
+      // Fumadocs provides a serializer for the page tree suitable for non-RSC
+      // environments (like TanStack Start). This avoids Symbol-backed React
+      // elements breaking loader serialization.
+      const tree = await source.serializePageTree(
+        source.pageTree as PageTree.Root,
+      );
+
+      const data: DocsRouteData = {
+        tree,
         path: page.path,
         // Page metadata for SEO
         title: page.data.title,
@@ -51,13 +72,15 @@ const serverLoader = createServerFn({
         owner: getGithubIssueOwner(),
         repo: getGithubIssueRepo(),
       };
+
+      return data;
     } catch (error) {
       // Re-throw notFound errors as-is
-      if (error && typeof error === 'object' && 'notFound' in error) {
+      if (error && typeof error === "object" && "notFound" in error) {
         throw error;
       }
       // Log unexpected errors and throw a generic error
-      console.error('Error loading docs page:', error);
+      console.error("Error loading docs page:", error);
       throw notFound();
     }
   });
@@ -100,7 +123,9 @@ const clientLoader = browserCollections.docs.createClientLoader({
           <div className="mt-6">
             <Feedback
               onRateAction={(url, fb) =>
-                onRateAction({ data: { url, feedback: fb } }) as Promise<ActionResponse>
+                onRateAction({
+                  data: { url, feedback: fb },
+                }) as Promise<ActionResponse>
               }
             />
           </div>
@@ -113,7 +138,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
 // Core logic for creating feedback issues. Exported for testability.
 export interface FeedbackInput {
   url: string;
-  feedback: { opinion: 'good' | 'bad'; message: string };
+  feedback: { opinion: "good" | "bad"; message: string };
 }
 
 // Server action wrapper that delegates to handleCreateFeedback.
@@ -121,12 +146,12 @@ export interface FeedbackInput {
 // src/server/actions/docs-feedback.server.ts and imported above.
 
 function Page() {
-  const data = Route.useLoaderData();
+  const data = Route.useLoaderData() as DocsRouteData;
   const Content = clientLoader.getComponent(data.path);
-  const tree = useMemo(
-    () => transformPageTree(data.tree as PageTree.Folder),
-    [data.tree],
-  );
+  const tree = useMemo(() => {
+    const deserialized = deserializePageTree(data.tree as any) as PageTree.Root;
+    return transformPageTree(deserialized as any);
+  }, [data.tree]);
 
   const pageObj = {
     url: data.url,
@@ -150,7 +175,9 @@ function Page() {
         tabs: {
           transform: (option, _node) => ({
             ...option,
-            icon: sidebarTabIcons[option.title as keyof typeof sidebarTabIcons] || option.icon,
+            icon:
+              sidebarTabIcons[option.title as keyof typeof sidebarTabIcons] ||
+              option.icon,
           }),
         },
       }}
@@ -162,7 +189,7 @@ function Page() {
 
 function transformPageTree(root: PageTree.Root): PageTree.Root {
   function mapNode<T extends PageTree.Node>(item: T): T {
-    if (typeof item.icon === 'string') {
+    if (typeof item.icon === "string") {
       item = {
         ...item,
         icon: (
@@ -175,7 +202,7 @@ function transformPageTree(root: PageTree.Root): PageTree.Root {
       };
     }
 
-    if (item.type === 'folder') {
+    if (item.type === "folder") {
       return {
         ...item,
         index: item.index ? mapNode(item.index) : undefined,
