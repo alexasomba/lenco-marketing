@@ -10,6 +10,9 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import * as MdxConfig from './source.config';
 
 const config = defineConfig({
+  optimizeDeps: {
+    include: ['lucide-react', 'motion/react'],
+  },
   build: {
     rollupOptions: {
       output: {
