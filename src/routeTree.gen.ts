@@ -15,6 +15,8 @@ import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as LlmsDotmdxSplatRouteImport } from './routes/llms[.]mdx.$'
 import { Route as DocsSplatRouteImport } from './routes/docs/$'
 import { Route as DocsDotmdxSplatRouteImport } from './routes/docs[.]mdx.$'
+import { Route as DemoTanstackFormRouteImport } from './routes/demo/tanstack-form'
+import { Route as DemoDataTableRouteImport } from './routes/demo/data-table'
 import { Route as BlogRssDotxmlRouteImport } from './routes/blog/rss[.]xml'
 import { Route as BlogAllRouteImport } from './routes/blog/all'
 import { Route as BlogSplatRouteImport } from './routes/blog/$'
@@ -55,6 +57,16 @@ const DocsSplatRoute = DocsSplatRouteImport.update({
 const DocsDotmdxSplatRoute = DocsDotmdxSplatRouteImport.update({
   id: '/docs.mdx/$',
   path: '/docs.mdx/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoTanstackFormRoute = DemoTanstackFormRouteImport.update({
+  id: '/demo/tanstack-form',
+  path: '/demo/tanstack-form',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoDataTableRoute = DemoDataTableRouteImport.update({
+  id: '/demo/data-table',
+  path: '/demo/data-table',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRssDotxmlRoute = BlogRssDotxmlRouteImport.update({
@@ -120,6 +132,8 @@ export interface FileRoutesByFullPath {
   '/blog/$': typeof BlogSplatRoute
   '/blog/all': typeof BlogAllRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
+  '/demo/data-table': typeof DemoDataTableRoute
+  '/demo/tanstack-form': typeof DemoTanstackFormRoute
   '/docs.mdx/$': typeof DocsDotmdxSplatRoute
   '/docs/$': typeof DocsSplatRoute
   '/llms.mdx/$': typeof LlmsDotmdxSplatRoute
@@ -139,6 +153,8 @@ export interface FileRoutesByTo {
   '/blog/$': typeof BlogSplatRoute
   '/blog/all': typeof BlogAllRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
+  '/demo/data-table': typeof DemoDataTableRoute
+  '/demo/tanstack-form': typeof DemoTanstackFormRoute
   '/docs.mdx/$': typeof DocsDotmdxSplatRoute
   '/docs/$': typeof DocsSplatRoute
   '/llms.mdx/$': typeof LlmsDotmdxSplatRoute
@@ -159,6 +175,8 @@ export interface FileRoutesById {
   '/blog/$': typeof BlogSplatRoute
   '/blog/all': typeof BlogAllRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
+  '/demo/data-table': typeof DemoDataTableRoute
+  '/demo/tanstack-form': typeof DemoTanstackFormRoute
   '/docs.mdx/$': typeof DocsDotmdxSplatRoute
   '/docs/$': typeof DocsSplatRoute
   '/llms.mdx/$': typeof LlmsDotmdxSplatRoute
@@ -180,6 +198,8 @@ export interface FileRouteTypes {
     | '/blog/$'
     | '/blog/all'
     | '/blog/rss.xml'
+    | '/demo/data-table'
+    | '/demo/tanstack-form'
     | '/docs.mdx/$'
     | '/docs/$'
     | '/llms.mdx/$'
@@ -199,6 +219,8 @@ export interface FileRouteTypes {
     | '/blog/$'
     | '/blog/all'
     | '/blog/rss.xml'
+    | '/demo/data-table'
+    | '/demo/tanstack-form'
     | '/docs.mdx/$'
     | '/docs/$'
     | '/llms.mdx/$'
@@ -218,6 +240,8 @@ export interface FileRouteTypes {
     | '/blog/$'
     | '/blog/all'
     | '/blog/rss.xml'
+    | '/demo/data-table'
+    | '/demo/tanstack-form'
     | '/docs.mdx/$'
     | '/docs/$'
     | '/llms.mdx/$'
@@ -238,6 +262,8 @@ export interface RootRouteChildren {
   BlogSplatRoute: typeof BlogSplatRoute
   BlogAllRoute: typeof BlogAllRoute
   BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
+  DemoDataTableRoute: typeof DemoDataTableRoute
+  DemoTanstackFormRoute: typeof DemoTanstackFormRoute
   DocsDotmdxSplatRoute: typeof DocsDotmdxSplatRoute
   DocsSplatRoute: typeof DocsSplatRoute
   LlmsDotmdxSplatRoute: typeof LlmsDotmdxSplatRoute
@@ -293,6 +319,20 @@ declare module '@tanstack/react-router' {
       path: '/docs.mdx/$'
       fullPath: '/docs.mdx/$'
       preLoaderRoute: typeof DocsDotmdxSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/tanstack-form': {
+      id: '/demo/tanstack-form'
+      path: '/demo/tanstack-form'
+      fullPath: '/demo/tanstack-form'
+      preLoaderRoute: typeof DemoTanstackFormRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/data-table': {
+      id: '/demo/data-table'
+      path: '/demo/data-table'
+      fullPath: '/demo/data-table'
+      preLoaderRoute: typeof DemoDataTableRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/rss.xml': {
@@ -382,6 +422,8 @@ const rootRouteChildren: RootRouteChildren = {
   BlogSplatRoute: BlogSplatRoute,
   BlogAllRoute: BlogAllRoute,
   BlogRssDotxmlRoute: BlogRssDotxmlRoute,
+  DemoDataTableRoute: DemoDataTableRoute,
+  DemoTanstackFormRoute: DemoTanstackFormRoute,
   DocsDotmdxSplatRoute: DocsDotmdxSplatRoute,
   DocsSplatRoute: DocsSplatRoute,
   LlmsDotmdxSplatRoute: LlmsDotmdxSplatRoute,

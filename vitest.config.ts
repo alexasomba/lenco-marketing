@@ -1,10 +1,12 @@
 /// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
+import { resolve } from 'path'
 
 export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    setupFiles: ['./tests/setup.ts'],
     // many deps ship CJS that may reference `module`; inline the tiny-warning
     // package so the worker transforms it to ESM and avoids runtime errors.
     server: {
@@ -16,10 +18,10 @@ export default defineConfig({
     testTimeout: 5000,
   },
   resolve: {
-    alias: [
-      { find: 'tiny-warning', replacement: 'tiny-warning/dist/tiny-warning.esm.js' },
-      { find: '@', replacement: '/Users/alexasomba/Documents/GitHub/alexasomba/lenco-marketing/src' },
-      { find: '@/', replacement: '/Users/alexasomba/Documents/GitHub/alexasomba/lenco-marketing/src/' },
-    ],
+    alias: {
+      'tiny-warning': 'tiny-warning/dist/tiny-warning.esm.js',
+      '@': resolve(__dirname, 'src'),
+      '@/': resolve(__dirname, 'src') + '/',
+    },
   },
 })

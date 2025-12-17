@@ -1,17 +1,12 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["guide/**"],
+  "exclude": ["guide/**", "tmp/**", "dist/**"],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
     "module": "ESNext",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "types": [
-      "./worker-configuration.d.ts",
-      "node",
-      "vite/client",
-      "vitest"
-    ],
+    "types": ["./worker-configuration.d.ts", "node", "vite/client", "vitest"],
 
     /* Bundler mode */
     "moduleResolution": "bundler",

@@ -1,0 +1,6 @@
+export { DataTable } from "./data-table"
+export { DataTableDemo } from "./demo"
+export { DataTableColumnHeader } from "./data-table-column-header"
+export { DataTableViewOptions } from "./data-table-view-options"
+export { DataTablePagination } from "./data-table-pagination"
+export type { Payment } from "./columns"
