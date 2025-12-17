@@ -6,7 +6,10 @@ interface PromoContentProps {
   className?: string;
 }
 
-export function PromoContent({ variant = "desktop", className }: PromoContentProps) {
+export function PromoContent({
+  variant = "desktop",
+  className,
+}: PromoContentProps) {
   if (variant === "mobile") {
     return (
       <div className={cn("border-t border-border bg-muted/20 p-3", className)}>
@@ -34,7 +37,9 @@ export function PromoContent({ variant = "desktop", className }: PromoContentPro
   }
 
   return (
-    <div className={cn("border border-border rounded-lg p-4 bg-card", className)}>
+    <div
+      className={cn("border border-border rounded-lg p-4 bg-card", className)}
+    >
       <div className="flex flex-col gap-4">
         <div className="w-full h-32 rounded-md bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center">
           <div className="text-4xl font-bold text-primary">Lenco</div>
@@ -44,7 +49,8 @@ export function PromoContent({ variant = "desktop", className }: PromoContentPro
             Open a Lenco Account
           </h3>
           <p className="text-sm text-muted-foreground">
-            Get a free business current account with unlimited sub-accounts, instant payments, and powerful tools.
+            Get a free business current account with unlimited sub-accounts,
+            instant payments, and powerful tools.
           </p>
         </div>
         <a

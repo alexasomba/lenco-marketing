@@ -145,7 +145,7 @@ function BlogPostPage() {
               search={{ tag: "All" }}
               className={cn(
                 buttonVariants({ variant: "outline", size: "xs" }),
-                "h-6 w-6 p-0"
+                "h-6 w-6 p-0",
               )}
             >
               <ArrowLeft className="w-4 h-4" />
